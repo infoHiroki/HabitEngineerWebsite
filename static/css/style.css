@@ -162,39 +162,44 @@ li {
 }
 
 /* ========================================================================
-   ヘッダー
+   サイトレイアウト
    ======================================================================== */
-.site-header {
+.site-layout {
+  min-height: 100vh;
+}
+
+/* ========================================================================
+   サイドバー
+   ======================================================================== */
+.sidebar {
   background-color: var(--color-background);
-  border-bottom: 1px solid var(--color-border);
-  position: sticky;
+  border-right: 1px solid var(--color-border);
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  height: 100vh;
+  width: 250px;
+  padding: var(--spacing-lg);
+  overflow-y: auto;
 }
 
-.site-header .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: var(--spacing-md);
-  padding-bottom: var(--spacing-md);
-}
-
-.site-branding {
-  display: flex;
-  align-items: baseline;
+.sidebar-header {
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .site-title {
-  display: flex;
-  align-items: baseline;
-  gap: var(--spacing-sm);
+  display: block;
   color: var(--color-text);
+  text-decoration: none;
 }
 
 .company-name {
+  display: block;
   font-size: 1.5rem;
   font-weight: bold;
+  margin-bottom: var(--spacing-xs);
 }
 
 .tagline {
@@ -202,33 +207,38 @@ li {
   color: var(--color-text-light);
 }
 
-/* ナビゲーション */
-.nav-menu {
-  display: flex;
+/* サイドバーナビゲーション */
+.sidebar-nav .nav-menu {
   list-style: none;
-  gap: var(--spacing-lg);
+}
+
+.nav-item {
+  margin-bottom: var(--spacing-sm);
 }
 
 .nav-link {
+  display: block;
   color: var(--color-text);
   font-weight: 500;
-  padding: var(--spacing-sm) 0;
-  position: relative;
+  padding: var(--spacing-md);
+  border-radius: 4px;
+  transition: var(--transition);
 }
 
-.nav-link:hover,
+.nav-link:hover {
+  background-color: var(--color-background-gray);
+  color: var(--color-primary);
+}
+
 .nav-item.active .nav-link {
-  color: var(--color-primary-dark);
+  background-color: var(--color-primary);
+  color: var(--color-background);
 }
 
-.nav-item.active .nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--color-primary);
+
+/* メインラッパー */
+.main-wrapper {
+  margin-left: 250px;
 }
 
 /* ========================================================================
@@ -236,7 +246,7 @@ li {
    ======================================================================== */
 .site-main {
   min-height: 60vh;
-  padding: var(--spacing-xxl) 0;
+  padding: var(--spacing-xxl) var(--spacing-lg);
 }
 
 /* ページ本文 */
@@ -340,14 +350,7 @@ li {
   text-align: center;
 }
 
-/* サービス特有のスタイル */
-.card .price {
-  font-size: 1.75rem;
-  font-weight: bold;
-  color: var(--color-primary);
-  margin: 0;
-}
-
+/* 価格表示 */
 .price {
   font-size: 1.75rem;
   font-weight: bold;
@@ -372,8 +375,8 @@ li {
 }
 
 .button:hover {
-  background-color: var(--color-primary-dark);
-  opacity: 1;
+  background-color: var(--color-primary);
+  opacity: 0.9;
 }
 
 /* ========================================================================
@@ -433,16 +436,36 @@ li {
    レスポンシブ対応
    ======================================================================== */
 @media (max-width: 768px) {
-  /* ヘッダー */
-  .site-header .container {
-    flex-direction: column;
-    gap: var(--spacing-md);
+  /* サイトレイアウト */
+  .site-layout {
+    grid-template-columns: 1fr;
   }
   
-  .nav-menu {
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+  
+  .main-wrapper {
+    margin-left: 0;
+  }
+  
+  /* サイドバーナビゲーション */
+  .sidebar-nav .nav-menu {
+    display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
+  
+  .nav-item {
+    margin-bottom: 0;
+  }
+  
+  .nav-link {
+    padding: var(--spacing-sm) var(--spacing-md);
   }
   
   /* ヒーロー */
@@ -466,7 +489,7 @@ li {
   
   /* スペーシング調整 */
   .site-main {
-    padding: var(--spacing-xl) 0;
+    padding: var(--spacing-xl) var(--spacing-md);
   }
   
   .home-intro,

@@ -11,16 +11,16 @@
     {{ block "head" . }}{{ end }}
 </head>
 <body>
-    <header class="site-header">
-        <div class="container">
-            <div class="site-branding">
+    <div class="site-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
                 <a href="/" class="site-title">
                     <span class="company-name">{{ .Site.Params.companyName }}</span>
                     <span class="tagline">{{ .Site.Params.tagline }}</span>
                 </a>
             </div>
             
-            <nav class="site-nav">
+            <nav class="sidebar-nav">
                 <ul class="nav-menu">
                     {{ range .Site.Menus.main }}
                     <li class="nav-item{{ if $.IsMenuCurrent "main" . }} active{{ end }}">
@@ -29,36 +29,38 @@
                     {{ end }}
                 </ul>
             </nav>
-        </div>
-    </header>
+        </aside>
 
-    <main class="site-main">
-        {{ block "main" . }}{{ end }}
-    </main>
+        <div class="main-wrapper">
+            <main class="site-main">
+                {{ block "main" . }}{{ end }}
+            </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-company">
-                    <h3>{{ .Site.Params.companyName }}</h3>
-                    <p>{{ .Site.Params.description }}</p>
+            <footer class="site-footer">
+                <div class="container">
+                    <div class="footer-content">
+                        <div class="footer-company">
+                            <h3>{{ .Site.Params.companyName }}</h3>
+                            <p>{{ .Site.Params.description }}</p>
+                        </div>
+                        
+                        <div class="footer-links">
+                            <h4>リンク</h4>
+                            <ul>
+                                {{ range .Site.Menus.main }}
+                                <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+                                {{ end }}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-bottom">
+                        <p>{{ .Site.Params.copyright }}</p>
+                    </div>
                 </div>
-                
-                <div class="footer-links">
-                    <h4>リンク</h4>
-                    <ul>
-                        {{ range .Site.Menus.main }}
-                        <li><a href="{{ .URL }}">{{ .Name }}</a></li>
-                        {{ end }}
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>{{ .Site.Params.copyright }}</p>
-            </div>
+            </footer>
         </div>
-    </footer>
+    </div>
     
     {{ block "scripts" . }}{{ end }}
 </body>
