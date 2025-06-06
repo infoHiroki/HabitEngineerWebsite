@@ -1,5 +1,0 @@
-source "https://rubygems.org"
-
-# Use GitHub Pages compatible gems to avoid eventmachine issues
-gem "github-pages", group: :jekyll_plugins
-gem "webrick", "~> 1.8"

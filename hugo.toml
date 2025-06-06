@@ -21,8 +21,6 @@ defaultContentLanguage = 'ja'
   companyNameEn = 'Habit Engineer'
   tagline = '習慣 × エンジニア'
   
-  # カラーテーマ（桜ピンク）
-  primaryColor = '#FFC0CB'
   
   # Copyright
   copyright = '© 2025 HabitEngineer. All rights reserved.'

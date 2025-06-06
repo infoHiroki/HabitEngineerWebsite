@@ -373,7 +373,7 @@ li {
 }
 
 .home-services {
-  background-color: var(--color-background-gray);
+  background-color: var(--color-background);
 }
 
 .home-intro h2,
@@ -397,6 +397,26 @@ li {
   font-weight: bold;
   color: var(--color-text);
   margin: 0;
+}
+
+/* 推奨プランのスタイル */
+.card.recommended {
+  position: relative;
+  border-width: 3px;
+  border-color: var(--color-text);
+}
+
+.plan-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-text);
+  color: var(--color-background);
+  padding: 0.25rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: bold;
 }
 
 /* CTA */
