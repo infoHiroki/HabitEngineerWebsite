@@ -18,7 +18,7 @@ description: "良い業務習慣をIT技術で定着させ、継続的な成果�
 - **月次提案**で翌月の作業内容をカスタマイズ
 - **専門分野別サポート窓口**で迅速な対応
 
-お問い合わせ: [service@habitengineer.com](mailto:service@habitengineer.com)
+お問い合わせ: service@habitengineer.com
 
 ---
 
@@ -32,7 +32,7 @@ description: "良い業務習慣をIT技術で定着させ、継続的な成果�
 - 業務フローの最適化
 - 習慣定着を支援するアプリ開発
 
-**導入実績**: 桜十字病院 - 音声文字起こしアプリ開発・導入・運用支援  
+**導入実績**: 桜十字福岡病院 - 音声文字起こしアプリ開発・導入・運用支援  
 窓口: [dev@habitengineer.com](mailto:dev@habitengineer.com)
 
 ### 🤖 AI・機械学習ソリューション
@@ -88,5 +88,5 @@ description: "良い業務習慣をIT技術で定着させ、継続的な成果�
 - **日本語最適化**：日本語音声認識に特化
 - **クロスプラットフォーム対応**：Windows/Mac/Linux
 
-**導入実績**: 桜十字病院 - 会議音声から議事録生成まで完全自動化  
+**導入実績**: 桜十字福岡病院 - 会議音声から議事録生成まで完全自動化  
 窓口: [dev@habitengineer.com](mailto:dev@habitengineer.com)

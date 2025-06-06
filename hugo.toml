@@ -42,6 +42,12 @@ defaultContentLanguage = 'ja'
     weight = 20
     
   [[menu.main]]
+    identifier = 'products'
+    name = '開発製品'
+    url = '/products/'
+    weight = 25
+    
+  [[menu.main]]
     identifier = 'results'
     name = '実績'
     url = '/results/'
