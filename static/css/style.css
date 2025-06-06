@@ -504,43 +504,18 @@ li {
 }
 
 /* ========================================================================
-   フッター
+   ミニマルフッター
    ======================================================================== */
-.site-footer {
-  background-color: var(--color-background);
+.minimal-footer {
   border-top: 1px solid var(--color-border);
-  padding: var(--spacing-xl) 0 var(--spacing-lg);
-}
-
-.footer-content {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: var(--spacing-xl);
-  margin-bottom: var(--spacing-xl);
-}
-
-.footer-company h3 {
-  margin-bottom: var(--spacing-md);
-}
-
-.footer-links h4 {
-  margin-bottom: var(--spacing-md);
-}
-
-.footer-links ul {
-  list-style: none;
-}
-
-.footer-links li {
-  margin-bottom: var(--spacing-sm);
-}
-
-.footer-bottom {
+  padding: var(--spacing-sm) 0;
   text-align: center;
-  padding-top: var(--spacing-lg);
-  border-top: 1px solid var(--color-border);
+}
+
+.minimal-footer p {
   color: var(--color-text-light);
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  margin: 0;
 }
 
 /* ========================================================================

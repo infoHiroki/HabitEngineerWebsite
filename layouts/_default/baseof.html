@@ -36,27 +36,9 @@
                 {{ block "main" . }}{{ end }}
             </main>
 
-            <footer class="site-footer">
+            <footer class="minimal-footer">
                 <div class="container">
-                    <div class="footer-content">
-                        <div class="footer-company">
-                            <h3>{{ .Site.Params.companyName }}</h3>
-                            <p>{{ .Site.Params.description }}</p>
-                        </div>
-                        
-                        <div class="footer-links">
-                            <h4>リンク</h4>
-                            <ul>
-                                {{ range .Site.Menus.main }}
-                                <li><a href="{{ .URL }}">{{ .Name }}</a></li>
-                                {{ end }}
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="footer-bottom">
-                        <p>{{ .Site.Params.copyright }}</p>
-                    </div>
+                    <p>© 2025 HabitEngineer. All rights reserved.</p>
                 </div>
             </footer>
         </div>

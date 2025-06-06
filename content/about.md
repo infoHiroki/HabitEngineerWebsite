@@ -3,26 +3,28 @@ title: "事業者情報"
 description: "HabitEngineerの会社概要"
 ---
 
-## 基本情報
+## 会社概要
 
-- **事業者名**: HabitEngineer
-- **事業内容**: 習慣形成支援技術顧問サービス
+**事業者名**: HabitEngineer  
+**代表者**: Hiroki Takamura  
+**事業内容**: IT技術を活用した習慣形成支援・業務効率化コンサルティング
+
+## 企業理念
+
+技術で人生のコントロールを取り戻す。
+
+企業の業務習慣改善から始まり、将来的には個人の生活習慣、依存症回復支援まで。良い習慣をIT技術で定着させ、継続的な成果を実現します。
+
+## 主要事業
+
+- **ソフトウェア開発**: 業務効率化・自動化システムの開発
+- **AI・機械学習ソリューション**: LLMやデータ分析を活用した業務最適化
+- **Notion構築・運用支援**: 情報管理システムの構築・導入支援
+- **IT基盤構築・運用支援**: 継続可能な業務環境の構築
+- **技術顧問サービス**: 月15時間〜の定額制サポート
 
 ## お問い合わせ
 
-### 営業・サポート
+ご相談・お見積りは下記までお気軽にお問い合わせください。
 
-- [service@habitengineer.com](mailto:service@habitengineer.com) - 営業用
-- [support@habitengineer.com](mailto:support@habitengineer.com) - カスタマーサポート・継続案件
-- [info@habitengineer.com](mailto:info@habitengineer.com) - 全般的な情報管理・クライアントとのやりとり
-
-### 専門分野別
-
-- [dev@habitengineer.com](mailto:dev@habitengineer.com) - 開発全般（デスクトップ・ウェブアプリ）
-- [ai@habitengineer.com](mailto:ai@habitengineer.com) - AI関連導入支援・LLM・プロンプト構築・API連携
-- [notion@habitengineer.com](mailto:notion@habitengineer.com) - Notion構築代行・テンプレート提供・導入支援
-- [it@habitengineer.com](mailto:it@habitengineer.com) - IT全般・ITリテラシー低いクライアント向け全面支援
-
-### 管理用
-
-- [accounting@habitengineer.com](mailto:accounting@habitengineer.com) - 経理関連
+**メール**: info@habitengineer.com
