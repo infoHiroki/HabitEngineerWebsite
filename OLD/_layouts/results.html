@@ -1,0 +1,36 @@
+---
+layout: default
+---
+
+{% include breadcrumb.html %}
+
+<article class="results-detail">
+  <div class="container">
+    <header class="results-header">
+      <h1 class="results-title">{{ page.title }}</h1>
+      {% if page.client %}
+        <div class="results-meta">
+          <span class="client">クライアント: {{ page.client }}</span>
+          {% if page.date %}
+            <span class="date">{{ page.date | date: "%Y年%m月" }}</span>
+          {% endif %}
+        </div>
+      {% endif %}
+    </header>
+
+    <div class="results-content">
+      {{ content }}
+    </div>
+
+    {% if page.tags %}
+      <div class="results-tags">
+        <h3>関連タグ</h3>
+        <div class="tag-list">
+          {% for tag in page.tags %}
+            <span class="tag">{{ tag }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</article>

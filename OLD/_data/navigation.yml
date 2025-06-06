@@ -1,0 +1,16 @@
+main:
+  - name: "とは"
+    url: "/"
+  - name: "サービス"
+    url: "/services/"
+  - name: "実績"
+    url: "/results/"
+    submenu:
+      - name: "導入事例"
+        url: "/results/cases/"
+      - name: "開発製品"
+        url: "/results/products/"
+  - name: "事業者情報"
+    url: "/about/"
+  - name: "ブログ"
+    url: "/blog/"

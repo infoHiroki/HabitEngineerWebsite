@@ -1,0 +1,91 @@
+{{ define "main" }}
+<section class="hero-sub">
+  <div class="container">
+    <h1 class="page-title">{{ .Title }}</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="about-content">
+      <h2 class="section-title">基本情報</h2>
+      <table class="info-table">
+        <tr>
+          <th>事業者名</th>
+          <td>HabitEngineer</td>
+        </tr>
+        <tr>
+          <th>代表</th>
+          <td>[代表者名]</td>
+        </tr>
+        <tr>
+          <th>設立</th>
+          <td>[設立年]</td>
+        </tr>
+        <tr>
+          <th>事業内容</th>
+          <td>習慣形成支援技術顧問サービス</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section section-gray" id="contact">
+  <div class="container">
+    <h2 class="section-title">お問い合わせ</h2>
+    
+    <div class="contact-grid">
+      <div class="contact-category">
+        <h3>営業・サポート</h3>
+        <ul class="contact-list">
+          <li>
+            <strong>営業用</strong><br>
+            <a href="mailto:service@habitengineer.com">service@habitengineer.com</a>
+          </li>
+          <li>
+            <strong>カスタマーサポート・継続案件</strong><br>
+            <a href="mailto:support@habitengineer.com">support@habitengineer.com</a>
+          </li>
+          <li>
+            <strong>全般的な情報管理・クライアントとのやりとり</strong><br>
+            <a href="mailto:info@habitengineer.com">info@habitengineer.com</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="contact-category">
+        <h3>専門分野別</h3>
+        <ul class="contact-list">
+          <li>
+            <strong>開発全般</strong>（デスクトップ・ウェブアプリ）<br>
+            <a href="mailto:dev@habitengineer.com">dev@habitengineer.com</a>
+          </li>
+          <li>
+            <strong>AI関連導入支援</strong>（LLM・プロンプト構築・API連携）<br>
+            <a href="mailto:ai@habitengineer.com">ai@habitengineer.com</a>
+          </li>
+          <li>
+            <strong>Notion構築代行</strong>（テンプレート提供・導入支援）<br>
+            <a href="mailto:notion@habitengineer.com">notion@habitengineer.com</a>
+          </li>
+          <li>
+            <strong>IT全般</strong>（ITリテラシー低いクライアント向け全面支援）<br>
+            <a href="mailto:it@habitengineer.com">it@habitengineer.com</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="contact-category">
+        <h3>管理用</h3>
+        <ul class="contact-list">
+          <li>
+            <strong>経理関連</strong><br>
+            <a href="mailto:accounting@habitengineer.com">accounting@habitengineer.com</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}

@@ -1,0 +1,63 @@
+---
+layout: default
+title: ブログ
+description: HabitEngineerのブログ - 習慣改善とIT技術の最新情報
+---
+
+<section class="hero-sub">
+  <div class="container">
+    <h1 class="page-title">ブログ</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="blog-categories">
+      <h2>カテゴリ</h2>
+      <div class="category-links">
+        <a href="{{ '/blog/category/ai/' | relative_url }}" class="category-link">AI</a>
+        <a href="{{ '/blog/category/notion/' | relative_url }}" class="category-link">Notion</a>
+      </div>
+    </div>
+
+    <div class="blog-posts">
+      {% for post in paginator.posts %}
+        <article class="blog-post-card">
+          <h2 class="post-title">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          </h2>
+          <div class="post-meta">
+            <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y年%m月%d日" }}</time>
+            {% if post.categories %}
+              <span class="post-categories">
+                {% for category in post.categories %}
+                  <span class="category">{{ category }}</span>
+                {% endfor %}
+              </span>
+            {% endif %}
+          </div>
+          <div class="post-excerpt">
+            {{ post.excerpt | strip_html | truncate: 150 }}
+          </div>
+          <a href="{{ post.url | relative_url }}" class="read-more">続きを読む →</a>
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if paginator.total_pages > 1 %}
+      <nav class="pagination">
+        {% if paginator.previous_page %}
+          <a href="{{ paginator.previous_page_path | relative_url }}" class="prev">← 前のページ</a>
+        {% endif %}
+        
+        <span class="page-info">
+          {{ paginator.page }} / {{ paginator.total_pages }}
+        </span>
+        
+        {% if paginator.next_page %}
+          <a href="{{ paginator.next_page_path | relative_url }}" class="next">次のページ →</a>
+        {% endif %}
+      </nav>
+    {% endif %}
+  </div>
+</section>

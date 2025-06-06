@@ -1,0 +1,49 @@
+{% if page.url != "/" %}
+<nav class="breadcrumb" aria-label="パンくずリスト">
+  <ol class="breadcrumb-list">
+    <li class="breadcrumb-item">
+      <a href="{{ '/' | relative_url }}">トップ</a>
+    </li>
+    
+    {% assign url_parts = page.url | split: '/' %}
+    {% assign current_url = '' %}
+    
+    {% for part in url_parts %}
+      {% if part != '' %}
+        {% assign current_url = current_url | append: '/' | append: part %}
+        
+        {% if forloop.last %}
+          <li class="breadcrumb-item active" aria-current="page">
+            {{ page.title }}
+          </li>
+        {% else %}
+          <li class="breadcrumb-item">
+            {% case part %}
+              {% when 'services' %}
+                <a href="{{ '/services/' | relative_url }}">サービス</a>
+              {% when 'results' %}
+                <a href="{{ '/results/' | relative_url }}">実績</a>
+              {% when 'cases' %}
+                <a href="{{ '/results/cases/' | relative_url }}">導入事例</a>
+              {% when 'products' %}
+                <a href="{{ '/results/products/' | relative_url }}">開発製品</a>
+              {% when 'about' %}
+                <a href="{{ '/about/' | relative_url }}">事業者情報</a>
+              {% when 'blog' %}
+                <a href="{{ '/blog/' | relative_url }}">ブログ</a>
+              {% when 'category' %}
+                <span>カテゴリ</span>
+              {% when 'ai' %}
+                <a href="{{ '/blog/category/ai/' | relative_url }}">AI</a>
+              {% when 'notion' %}
+                <a href="{{ '/blog/category/notion/' | relative_url }}">Notion</a>
+              {% else %}
+                <span>{{ part }}</span>
+            {% endcase %}
+          </li>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </ol>
+</nav>
+{% endif %}
