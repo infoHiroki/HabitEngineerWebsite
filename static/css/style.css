@@ -112,7 +112,15 @@ img {
 /* カードグリッドレイアウト */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* 実績用1列レイアウト */
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr;
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
 }
@@ -220,8 +228,8 @@ li {
   top: 0;
   left: 0;
   height: 100vh;
-  width: 250px;
-  padding: var(--spacing-lg);
+  width: 280px;
+  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
   overflow-y: auto;
 }
 
@@ -280,7 +288,7 @@ li {
 
 /* メインラッパー */
 .main-wrapper {
-  margin-left: 250px;
+  margin-left: 280px;
 }
 
 /* ========================================================================
