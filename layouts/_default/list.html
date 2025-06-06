@@ -1,6 +1,19 @@
 {{ define "main" }}
 <section class="list-page">
     <div class="container">
+        <nav class="breadcrumb">
+            <a href="/">HabitEngineer</a>
+            {{ if .Section }}
+                {{ if eq .Section "results" }}
+                    > 実績
+                {{ else if eq .Section "blog" }}
+                    > ブログ
+                {{ else }}
+                    > {{ .Section | title }}
+                {{ end }}
+            {{ end }}
+        </nav>
+        
         <header class="page-header">
             <h1 class="page-title">{{ .Title }}</h1>
             {{ with .Description }}

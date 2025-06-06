@@ -1,6 +1,22 @@
 {{ define "main" }}
 <article class="page-content">
     <div class="container">
+        <nav class="breadcrumb">
+            <a href="/">HabitEngineer</a>
+            {{ if .Section }}
+                {{ if eq .Section "results" }}
+                    > <a href="/{{ .Section }}/">実績</a>
+                {{ else if eq .Section "blog" }}
+                    > <a href="/{{ .Section }}/">ブログ</a>
+                {{ else }}
+                    > <a href="/{{ .Section }}/">{{ .Section | title }}</a>
+                {{ end }}
+            {{ end }}
+            {{ if not .IsSection }}
+                > {{ .Title }}
+            {{ end }}
+        </nav>
+        
         <header class="page-header">
             <h1 class="page-title">{{ .Title }}</h1>
         </header>
