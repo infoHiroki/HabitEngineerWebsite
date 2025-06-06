@@ -71,6 +71,55 @@ img {
 }
 
 /* ========================================================================
+   カード共通スタイル
+   ======================================================================== */
+.card {
+  background-color: var(--color-background);
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  padding: var(--spacing-lg);
+  transition: var(--transition);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(255, 182, 193, 0.3);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  margin-bottom: var(--spacing-md);
+}
+
+.card-title {
+  font-size: 1.5rem;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.card-subtitle {
+  color: var(--color-text-light);
+  font-size: 0.875rem;
+}
+
+.card-body {
+  margin-bottom: var(--spacing-md);
+}
+
+.card-footer {
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+}
+
+/* カードグリッドレイアウト */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* ========================================================================
    レイアウト共通
    ======================================================================== */
 .container {
@@ -291,58 +340,19 @@ li {
   text-align: center;
 }
 
-/* サービスカード */
-.service-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
-}
-
-.service-card {
-  background-color: var(--color-background);
-  border: 2px solid var(--color-primary);
-  border-radius: 8px;
-  padding: var(--spacing-xl);
-  text-align: center;
-  transition: var(--transition);
-}
-
-.service-card:hover {
-  box-shadow: 0 4px 12px rgba(255, 192, 203, 0.3);
-}
-
-.service-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: var(--spacing-md);
-  color: var(--color-primary-dark);
+/* サービス特有のスタイル */
+.card .price {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  margin: 0;
 }
 
 .price {
   font-size: 1.75rem;
   font-weight: bold;
-  color: var(--color-text);
-  margin-bottom: var(--spacing-md);
-}
-
-/* 実績アイテム */
-.result-items {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
-}
-
-.result-item {
-  background-color: var(--color-background);
-  border-left: 4px solid var(--color-primary);
-  padding: var(--spacing-lg);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.result-item h3 {
-  margin-bottom: var(--spacing-sm);
-  color: var(--color-primary-dark);
+  color: var(--color-primary);
+  margin: 0;
 }
 
 /* CTA */
@@ -367,36 +377,16 @@ li {
 }
 
 /* ========================================================================
-   リストページ
+   カード内のリンクスタイル
    ======================================================================== */
-.list-items {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
+.card-title a {
+  color: var(--color-text);
+  text-decoration: none;
 }
 
-.list-item {
-  padding: var(--spacing-lg);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.list-item:last-child {
-  border-bottom: none;
-}
-
-.item-title {
-  font-size: 1.5rem;
-  margin-bottom: var(--spacing-sm);
-}
-
-.item-description {
-  color: var(--color-text-light);
-  margin-bottom: var(--spacing-sm);
-}
-
-.item-date {
-  font-size: 0.875rem;
-  color: var(--color-text-light);
+.card-title a:hover {
+  color: var(--color-primary);
+  text-decoration: none;
 }
 
 /* ========================================================================
