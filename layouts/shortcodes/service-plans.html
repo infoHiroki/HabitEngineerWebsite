@@ -1,0 +1,104 @@
+<div class="service-plans">
+    <div class="plan-card recommended">
+        <div class="plan-badge">推奨</div>
+        <h3>6ヶ月契約</h3>
+        <div class="plan-price">
+            <span class="price-label">月額</span>
+            <span class="price-amount">30,000</span>
+            <span class="price-unit">円</span>
+        </div>
+        <p class="plan-description">じっくりと習慣を定着させる長期サポート</p>
+    </div>
+    
+    <div class="plan-card">
+        <h3>3ヶ月契約</h3>
+        <div class="plan-price">
+            <span class="price-label">月額</span>
+            <span class="price-amount">50,000</span>
+            <span class="price-unit">円</span>
+        </div>
+        <p class="plan-description">短期集中で成果を出す集中サポート</p>
+    </div>
+</div>
+
+<style>
+.service-plans {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.plan-card {
+    background-color: #FFFFFF;
+    border: 2px solid #FFB6C1;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.plan-card:hover {
+    box-shadow: 0 4px 12px rgba(255, 192, 203, 0.3);
+    transform: translateY(-2px);
+}
+
+.plan-card.recommended {
+    border-color: #FFB6C1;
+    background-color: #F8F9FA;
+}
+
+.plan-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #FFB6C1;
+    color: #FFFFFF;
+    padding: 0.25rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: bold;
+}
+
+.plan-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #333333;
+}
+
+.plan-price {
+    margin-bottom: 1rem;
+}
+
+.price-label {
+    font-size: 0.875rem;
+    color: #666666;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.price-amount {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333333;
+}
+
+.price-unit {
+    font-size: 1rem;
+    color: #666666;
+}
+
+.plan-description {
+    font-size: 0.9375rem;
+    color: #666666;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .service-plans {
+        grid-template-columns: 1fr;
+    }
+}
+</style>

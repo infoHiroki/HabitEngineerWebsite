@@ -1,0 +1,39 @@
+baseURL = 'https://habitengineer.com'
+languageCode = 'ja'
+title = 'HabitEngineer'
+defaultContentLanguage = 'ja'
+
+[params]
+  description = '良い習慣をIT技術で定着させる専門家'
+  author = 'HabitEngineer'
+
+[menu]
+  [[menu.main]]
+    name = 'とは'
+    url = '/'
+    weight = 10
+  
+  [[menu.main]]
+    name = 'サービス'
+    url = '/services/'
+    weight = 20
+  
+  [[menu.main]]
+    name = '実績'
+    url = '/results/'
+    weight = 30
+  
+  [[menu.main]]
+    name = '事業者情報'
+    url = '/about/'
+    weight = 40
+  
+  [[menu.main]]
+    name = 'ブログ'
+    url = '/blog/'
+    weight = 50
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
