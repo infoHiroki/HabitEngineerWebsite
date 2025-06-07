@@ -240,9 +240,29 @@ li {
 }
 
 .site-title {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
   color: var(--color-text);
   text-decoration: none;
+}
+
+.logo {
+  flex-shrink: 0;
+}
+
+.logo img {
+  display: block;
+  transition: var(--transition);
+}
+
+.logo img:hover {
+  transform: scale(1.05);
+}
+
+.title-text {
+  display: flex;
+  flex-direction: column;
 }
 
 .company-name {
@@ -552,6 +572,18 @@ li {
   
   .main-wrapper {
     margin-left: 0;
+  }
+  
+  /* モバイル時のロゴサイズ調整 */
+  .site-title {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-sm);
+  }
+  
+  .logo img {
+    width: 40px;
+    height: 40px;
   }
   
   /* サイドバーナビゲーション */

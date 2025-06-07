@@ -6,6 +6,10 @@
     <meta name="description" content="{{ .Site.Params.description }}">
     <title>{{ if .IsHome }}{{ .Site.Title }} - {{ .Site.Params.tagline }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
     
+    <!-- ファビコン -->
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    
     <link rel="stylesheet" href="/css/style.css">
     
     {{ block "head" . }}{{ end }}
@@ -15,8 +19,13 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <a href="/" class="site-title">
-                    <span class="company-name">{{ .Site.Params.companyName }}</span>
-                    <span class="tagline">{{ .Site.Params.tagline }}</span>
+                    <div class="logo">
+                        <img src="/images/logo.svg" alt="HabitEngineer Logo" width="50" height="50">
+                    </div>
+                    <div class="title-text">
+                        <span class="company-name">{{ .Site.Params.companyName }}</span>
+                        <span class="tagline">{{ .Site.Params.tagline }}</span>
+                    </div>
                 </a>
             </div>
             
