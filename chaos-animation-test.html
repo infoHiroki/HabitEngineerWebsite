@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>混沌アニメーション テスト</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            font-family: sans-serif;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-box {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 16px;
+            margin: 0 0 10px 0;
+        }
+        svg {
+            border: 1px solid #eee;
+            width: 100%;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>混沌表現のアニメーションパターン</h1>
+    <div class="container">
+        
+        <!-- 1. ブラウン運動風 -->
+        <div class="test-box">
+            <h2>1. ブラウン運動風</h2>
+            <svg viewBox="0 0 400 200">
+                <circle cx="50" cy="50" r="5" fill="#333">
+                    <animateTransform
+                        attributeName="transform"
+                        type="translate"
+                        values="0,0; 20,10; 15,25; 30,20; 10,35; 25,30; 0,0"
+                        dur="8s"
+                        repeatCount="indefinite"/>
+                </circle>
+                <circle cx="100" cy="100" r="4" fill="#555">
+                    <animateTransform
+                        attributeName="transform"
+                        type="translate"
+                        values="0,0; -15,20; -20,10; -10,25; -25,15; -5,30; 0,0"
+                        dur="7s"
+                        repeatCount="indefinite"/>
+                </circle>
+                <circle cx="150" cy="75" r="6" fill="#444">
+                    <animateTransform
+                        attributeName="transform"
+                        type="translate"
+                        values="0,0; 10,-15; 25,-10; 20,5; 30,-20; 15,-5; 0,0"
+                        dur="9s"
+                        repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+        <!-- 2. 振り子運動 -->
+        <div class="test-box">
+            <h2>2. 振り子・ゆらぎ運動</h2>
+            <svg viewBox="0 0 400 200">
+                <circle cx="100" cy="100" r="5" fill="#333">
+                    <animateTransform
+                        attributeName="transform"
+                        type="translate"
+                        values="0,0; 30,-20; 0,0; -30,-20; 0,0"
+                        dur="3s"
+                        repeatCount="indefinite"
+                        calcMode="spline"
+                        keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"
+                        keyTimes="0;0.25;0.5;0.75;1"/>
+                </circle>
+                <circle cx="200" cy="100" r="4" fill="#555">
+                    <animateTransform
+                        attributeName="transform"
+                        type="translate"
+                        values="0,0; 20,30; 0,0; -20,30; 0,0"
+                        dur="4s"
+                        repeatCount="indefinite"
+                        calcMode="spline"
+                        keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"
+                        keyTimes="0;0.25;0.5;0.75;1"/>
+                </circle>
+                <circle cx="300" cy="100" r="6" fill="#444">
+                    <animateTransform
+                        attributeName="transform"
+                        type="translate"
+                        values="0,0; -25,15; 0,0; 25,15; 0,0"
+                        dur="5s"
+                        repeatCount="indefinite"
+                        calcMode="spline"
+                        keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"
+                        keyTimes="0;0.25;0.5;0.75;1"/>
+                </circle>
+            </svg>
+        </div>
+
+        <!-- 3. 滑らかなランダム軌道 -->
+        <div class="test-box">
+            <h2>3. 滑らかなランダム軌道</h2>
+            <svg viewBox="0 0 400 200">
+                <circle cx="50" cy="100" r="5" fill="#333">
+                    <animateMotion
+                        path="M0,0 Q20,-30 40,0 T80,0 T120,0 T160,0 T200,0 T240,0 T0,0"
+                        dur="12s"
+                        repeatCount="indefinite"/>
+                </circle>
+                <circle cx="150" cy="100" r="4" fill="#555">
+                    <animateMotion
+                        path="M0,0 Q-20,20 -40,0 T-80,0 T-120,0 T-80,0 T-40,0 T0,0"
+                        dur="10s"
+                        repeatCount="indefinite"/>
+                </circle>
+                <circle cx="250" cy="100" r="6" fill="#444">
+                    <animateMotion
+                        path="M0,0 Q30,15 0,30 T-30,30 T-30,0 T0,-30 T30,-30 T30,0 T0,0"
+                        dur="15s"
+                        repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+        <!-- 4. 重力シミュレーション風 -->
+        <div class="test-box">
+            <h2>4. 重力・引力風</h2>
+            <svg viewBox="0 0 400 200">
+                <g>
+                    <circle cx="100" cy="50" r="5" fill="#333">
+                        <animateTransform
+                            attributeName="transform"
+                            type="translate"
+                            values="0,0; 50,50; 60,60; 50,50; 0,0"
+                            dur="6s"
+                            repeatCount="indefinite"/>
+                        <animate
+                            attributeName="r"
+                            values="5;7;5;7;5"
+                            dur="6s"
+                            repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="300" cy="150" r="4" fill="#555">
+                        <animateTransform
+                            attributeName="transform"
+                            type="translate"
+                            values="0,0; -50,-50; -60,-60; -50,-50; 0,0"
+                            dur="6s"
+                            repeatCount="indefinite"/>
+                        <animate
+                            attributeName="r"
+                            values="4;6;4;6;4"
+                            dur="6s"
+                            repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="200" cy="100" r="8" fill="#E73E8F" opacity="0.3">
+                        <animate
+                            attributeName="r"
+                            values="8;12;8"
+                            dur="3s"
+                            repeatCount="indefinite"/>
+                    </circle>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 5. フェードイン・アウト -->
+        <div class="test-box">
+            <h2>5. フェード重ね合わせ</h2>
+            <svg viewBox="0 0 400 200">
+                <g>
+                    <!-- 同じ位置に複数配置 -->
+                    <circle cx="100" cy="100" r="10" fill="#333">
+                        <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="100" cy="100" r="7" fill="#555">
+                        <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" begin="1s"/>
+                    </circle>
+                    <circle cx="100" cy="100" r="4" fill="#777">
+                        <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" begin="2s"/>
+                    </circle>
+                    
+                    <circle cx="250" cy="100" r="8" fill="#444">
+                        <animate attributeName="opacity" values="0;0.8;0" dur="4s" repeatCount="indefinite"/>
+                        <animateTransform
+                            attributeName="transform"
+                            type="scale"
+                            values="1;1.5;1"
+                            dur="4s"
+                            repeatCount="indefinite"
+                            additive="sum"/>
+                    </circle>
+                    <circle cx="250" cy="100" r="5" fill="#666">
+                        <animate attributeName="opacity" values="0;0.8;0" dur="4s" repeatCount="indefinite" begin="2s"/>
+                        <animateTransform
+                            attributeName="transform"
+                            type="scale"
+                            values="1;1.5;1"
+                            dur="4s"
+                            repeatCount="indefinite"
+                            begin="2s"
+                            additive="sum"/>
+                    </circle>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 6. 組み合わせ -->
+        <div class="test-box">
+            <h2>6. 組み合わせ（推奨）</h2>
+            <svg viewBox="0 0 400 200">
+                <!-- ゆらぎ + フェード -->
+                <circle cx="80" cy="100" r="6" fill="#333">
+                    <animateTransform
+                        attributeName="transform"
+                        type="translate"
+                        values="0,0; 15,-10; 10,15; -10,10; -15,-15; 0,0"
+                        dur="8s"
+                        repeatCount="indefinite"
+                        calcMode="spline"
+                        keySplines="0.3 0 0.7 1;0.3 0 0.7 1;0.3 0 0.7 1;0.3 0 0.7 1;0.3 0 0.7 1"
+                        keyTimes="0;0.2;0.4;0.6;0.8;1"/>
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="4s" repeatCount="indefinite"/>
+                </circle>
+                
+                <!-- ランダムウォーク + サイズ変化 -->
+                <circle cx="200" cy="80" r="5" fill="#555">
+                    <animateMotion
+                        path="M0,0 Q20,10 10,20 T-10,20 T-20,0 T0,-20 T20,-10 T0,0"
+                        dur="10s"
+                        repeatCount="indefinite"/>
+                    <animate attributeName="r" values="5;7;4;6;5" dur="5s" repeatCount="indefinite"/>
+                </circle>
+                
+                <!-- 振り子 + フェード -->
+                <circle cx="320" cy="100" r="7" fill="#444">
+                    <animateTransform
+                        attributeName="transform"
+                        type="translate"
+                        values="0,0; 25,-20; 0,0; -25,-20; 0,0"
+                        dur="6s"
+                        repeatCount="indefinite"
+                        calcMode="spline"
+                        keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"
+                        keyTimes="0;0.25;0.5;0.75;1"/>
+                    <animate attributeName="opacity" values="0.5;1;0.5;1;0.5" dur="6s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+    </div>
+    
+    <div style="margin: 40px auto; max-width: 800px; padding: 20px; background: white; border: 1px solid #ddd;">
+        <h2>どれがいいですか？</h2>
+        <p>1-5の各パターン、または6の組み合わせパターンから選んでください。</p>
+        <p>個人的には<strong>6の組み合わせ</strong>が、混沌としながらも滑らかで見やすいと思います。</p>
+    </div>
+</body>
+</html>
