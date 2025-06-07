@@ -1,0 +1,182 @@
+<svg width="1920" height="600" viewBox="0 0 1920 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    
+    <!-- ピンクのグラデーション -->
+    <linearGradient id="pinkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#E73E8F;stop-opacity:0.1"/>
+      <stop offset="100%" style="stop-color:#E73E8F;stop-opacity:0.3"/>
+    </linearGradient>
+    
+    <!-- アニメーション用のグラデーション -->
+    <radialGradient id="pulseGradient">
+      <stop offset="0%" style="stop-color:#E73E8F;stop-opacity:0.5"/>
+      <stop offset="100%" style="stop-color:#E73E8F;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  
+  
+  <!-- 左側：混沌とした要素 -->
+  <g id="chaos" opacity="0.7">
+    <!-- ランダムな点 -->
+    <circle cx="150" cy="120" r="8" fill="#333">
+      <animate attributeName="cx" from="150" to="180" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="280" cy="200" r="7" fill="#444">
+      <animate attributeName="cy" from="200" to="160" dur="5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="200" cy="350" r="9" fill="#333">
+      <animate attributeName="cx" from="200" to="240" dur="7s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="320" cy="280" r="7" fill="#555">
+      <animate attributeName="cy" from="280" to="240" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="180" cy="450" r="8" fill="#333">
+      <animate attributeName="cx" from="180" to="220" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="250" cy="500" r="7" fill="#444">
+      <animate attributeName="cy" from="500" to="460" dur="5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="100" cy="300" r="8" fill="#333">
+      <animate attributeName="cx" from="100" to="140" dur="7s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- ランダムな線 -->
+    <path d="M50,150 L120,180 L80,250" stroke="#666" stroke-width="2" fill="none" opacity="0.7">
+      <animateTransform attributeName="transform" type="translate" from="0,0" to="20,10" dur="8s" repeatCount="indefinite"/>
+    </path>
+    <path d="M200,100 L180,200 L220,280" stroke="#777" stroke-width="1.5" fill="none" opacity="0.6">
+      <animateTransform attributeName="transform" type="translate" from="0,0" to="15,-10" dur="6s" repeatCount="indefinite"/>
+    </path>
+    <path d="M300,400 L250,350 L350,300" stroke="#555" stroke-width="1.5" fill="none" opacity="0.7">
+      <animateTransform attributeName="transform" type="translate" from="0,0" to="-15,15" dur="7s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- 不規則な形状 -->
+    <polygon points="150,250 180,230 170,270 140,260" fill="#999" opacity="0.6"/>
+    <polygon points="280,150 310,170 290,190 270,165" fill="#888" opacity="0.5"/>
+  </g>
+  
+  <!-- 中央：変化の過程 -->
+  <g id="transition">
+    <!-- 流れのパス -->
+    <path d="M500,300 Q700,200 900,300 Q1100,400 1300,300" 
+          stroke="#E73E8F" 
+          stroke-width="3" 
+          fill="none" 
+          opacity="0.3"
+          stroke-dasharray="15,10">
+      <animate attributeName="stroke-dashoffset" from="0" to="25" dur="3s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- 流れに沿って移動する要素 -->
+    <circle cx="500" cy="300" r="3" fill="#555">
+      <animate attributeName="cx" from="500" to="1300" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="300;200;300;400;300" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;1;1;0" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    
+    <circle cx="500" cy="300" r="2" fill="#666">
+      <animate attributeName="cx" from="500" to="1300" dur="8s" repeatCount="indefinite" begin="1s"/>
+      <animate attributeName="cy" values="300;200;300;400;300" dur="8s" repeatCount="indefinite" begin="1s"/>
+      <animate attributeName="opacity" values="0;1;1;1;0" dur="8s" repeatCount="indefinite" begin="1s"/>
+    </circle>
+    
+    <circle cx="500" cy="300" r="2" fill="#777">
+      <animate attributeName="cx" from="500" to="1300" dur="8s" repeatCount="indefinite" begin="2s"/>
+      <animate attributeName="cy" values="300;200;300;400;300" dur="8s" repeatCount="indefinite" begin="2s"/>
+      <animate attributeName="opacity" values="0;1;1;1;0" dur="8s" repeatCount="indefinite" begin="2s"/>
+    </circle>
+    
+    <circle cx="500" cy="300" r="3" fill="#555">
+      <animate attributeName="cx" from="500" to="1300" dur="8s" repeatCount="indefinite" begin="3s"/>
+      <animate attributeName="cy" values="300;200;300;400;300" dur="8s" repeatCount="indefinite" begin="3s"/>
+      <animate attributeName="opacity" values="0;1;1;1;0" dur="8s" repeatCount="indefinite" begin="3s"/>
+    </circle>
+  </g>
+  
+  <!-- 右側：美しいループ -->
+  <g id="order">
+    <!-- メインループ -->
+    <circle cx="1500" cy="300" r="120" 
+            stroke="#E73E8F" 
+            stroke-width="3" 
+            fill="none" 
+            opacity="0.8"
+            stroke-dasharray="5,10">
+      <animateTransform
+        attributeName="transform"
+        attributeType="XML"
+        type="rotate"
+        from="0 1500 300"
+        to="360 1500 300"
+        dur="20s"
+        repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- 内側のループ -->
+    <circle cx="1500" cy="300" r="80" 
+            stroke="#E73E8F" 
+            stroke-width="2" 
+            fill="none" 
+            opacity="0.5">
+      <animateTransform
+        attributeName="transform"
+        attributeType="XML"
+        type="rotate"
+        from="0 1500 300"
+        to="-360 1500 300"
+        dur="15s"
+        repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- 軌道上の要素 -->
+    <g>
+      <circle cx="1620" cy="300" r="12" fill="#E73E8F" opacity="0.8">
+        <animateTransform
+          attributeName="transform"
+          attributeType="XML"
+          type="rotate"
+          from="0 1500 300"
+          to="360 1500 300"
+          dur="10s"
+          repeatCount="indefinite"/>
+      </circle>
+      <circle cx="1580" cy="300" r="9" fill="#E73E8F" opacity="0.6">
+        <animateTransform
+          attributeName="transform"
+          attributeType="XML"
+          type="rotate"
+          from="0 1500 300"
+          to="360 1500 300"
+          dur="8s"
+          repeatCount="indefinite"/>
+      </circle>
+      <circle cx="1540" cy="300" r="6" fill="#E73E8F" opacity="0.4">
+        <animateTransform
+          attributeName="transform"
+          attributeType="XML"
+          type="rotate"
+          from="0 1500 300"
+          to="360 1500 300"
+          dur="6s"
+          repeatCount="indefinite"/>
+      </circle>
+    </g>
+    
+    <!-- パルスエフェクト -->
+    <circle cx="1500" cy="300" r="40" fill="url(#pulseGradient)">
+      <animate attributeName="r" from="50" to="200" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" from="0.5" to="0" dur="3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- 装飾的な要素 -->
+  <g opacity="0.2">
+    <!-- 背景パターン -->
+    <pattern id="dots" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+      <circle cx="25" cy="25" r="1" fill="#ddd"/>
+    </pattern>
+    <rect width="1920" height="600" fill="url(#dots)"/>
+  </g>
+  
+</svg>

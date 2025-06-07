@@ -360,19 +360,17 @@ li {
 
 /* ヒーロー背景画像用 */
 .hero-with-bg {
-  background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  background-size: cover;
+  background-image: url('/images/hero-sample.svg');
+  background-size: contain;
   background-position: center;
-  min-height: 60vh;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  min-height: 400px;
+  height: 60vh;
   display: flex;
   align-items: center;
 }
 
-.hero-overlay {
-  background-color: rgba(255, 255, 255, 0.9);
-  width: 100%;
-  padding: var(--spacing-xxl) 0;
-}
 
 .hero-title {
   font-size: 3rem;
