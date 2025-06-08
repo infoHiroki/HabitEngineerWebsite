@@ -435,6 +435,90 @@ li {
 }
 
 /* ========================================================================
+   モバイルヘッダー
+   ======================================================================== */
+.mobile-header {
+  display: none;
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 60px;
+}
+
+.mobile-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--spacing-md);
+  height: 100%;
+}
+
+.mobile-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.mobile-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.hamburger-button {
+  background: none;
+  border: none;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 0;
+}
+
+.hamburger-line {
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-text);
+  transition: var(--transition);
+  transform-origin: center;
+}
+
+.hamburger-button.active .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-button.active .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-button.active .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+.mobile-overlay.active {
+  display: block;
+}
+
+/* ========================================================================
    サイドバー
    ======================================================================== */
 .sidebar {
@@ -852,48 +936,46 @@ li {
    レスポンシブ対応
    ======================================================================== */
 @media (max-width: 768px) {
-  /* サイトレイアウト */
-  .site-layout {
-    grid-template-columns: 1fr;
+  /* モバイルヘッダー表示 */
+  .mobile-header {
+    display: block;
   }
   
+  /* サイドバーをオーバーレイメニューに変更 */
   .sidebar {
-    position: relative;
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid var(--color-border);
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100vh;
+    z-index: 999;
+    transition: left 0.3s ease;
+    border-right: 1px solid var(--color-border);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   }
   
+  .sidebar.active {
+    left: 0;
+  }
+  
+  /* メインコンテンツの調整 */
   .main-wrapper {
     margin-left: 0;
-  }
-  
-  /* モバイル時のロゴサイズ調整 */
-  .site-title {
-    flex-direction: column;
-    text-align: center;
-    gap: var(--spacing-sm);
-  }
-  
-  .logo img {
-    width: 40px;
-    height: 40px;
+    padding-top: 60px; /* モバイルヘッダー分 */
   }
   
   /* サイドバーナビゲーション */
   .sidebar-nav .nav-menu {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-sm);
+    display: block;
   }
   
   .nav-item {
-    margin-bottom: 0;
+    margin-bottom: var(--spacing-sm);
   }
   
   .nav-link {
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: var(--spacing-md);
+    border-radius: 4px;
   }
   
   /* ヒーロー */

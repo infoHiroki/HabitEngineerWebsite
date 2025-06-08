@@ -16,6 +16,22 @@
 </head>
 <body>
     <div class="site-layout">
+        <!-- モバイル用ヘッダー -->
+        <header class="mobile-header">
+            <div class="mobile-header-content">
+                <a href="/" class="mobile-logo">
+                    <img src="/images/logo.svg" alt="HabitEngineer Logo" width="40" height="40">
+                    <span class="mobile-title">{{ .Site.Params.companyName }}</span>
+                </a>
+                <button class="hamburger-button" aria-label="メニューを開く">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- デスクトップ用サイドバー / モバイル用オーバーレイメニュー -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <a href="/" class="site-title">
@@ -39,6 +55,9 @@
                 </ul>
             </nav>
         </aside>
+
+        <!-- モバイル用オーバーレイ -->
+        <div class="mobile-overlay"></div>
 
         <div class="main-wrapper">
             <main class="site-main">
