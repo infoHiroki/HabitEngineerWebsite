@@ -19,11 +19,59 @@
         
         <header class="page-header">
             <h1 class="page-title">{{ .Title }}</h1>
+            {{ if .Date }}
+            <time class="post-date" datetime="{{ .Date.Format "2006-01-02" }}">
+                {{ .Date.Format "2006年1月2日" }}
+            </time>
+            {{ end }}
+            {{ if .Params.tags }}
+            <div class="tags">
+                {{ range .Params.tags }}
+                <span class="tag">#{{ . }}</span>
+                {{ end }}
+            </div>
+            {{ end }}
         </header>
         
         <div class="page-body">
             {{ .Content }}
         </div>
+        
+        {{ if eq .Section "blog" }}
+        {{ $currentPage := . }}
+        {{ $relatedPosts := slice }}
+        {{ range .Site.Pages }}
+            {{ if and (eq .Section "blog") (ne .Permalink $currentPage.Permalink) }}
+                {{ $commonTags := intersect .Params.tags $currentPage.Params.tags }}
+                {{ if gt (len $commonTags) 0 }}
+                    {{ $relatedPosts = $relatedPosts | append . }}
+                {{ end }}
+            {{ end }}
+        {{ end }}
+        
+        {{ if gt (len $relatedPosts) 0 }}
+        <section class="related-posts">
+            <h2>関連記事</h2>
+            <div class="related-posts-grid">
+                {{ range first 3 $relatedPosts }}
+                <article class="related-post-card">
+                    <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+                    {{ if .Description }}
+                    <p>{{ .Description }}</p>
+                    {{ end }}
+                    {{ if .Params.tags }}
+                    <div class="tags">
+                        {{ range first 3 .Params.tags }}
+                        <span class="tag">#{{ . }}</span>
+                        {{ end }}
+                    </div>
+                    {{ end }}
+                </article>
+                {{ end }}
+            </div>
+        </section>
+        {{ end }}
+        {{ end }}
     </div>
 </article>
 {{ end }}

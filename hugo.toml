@@ -62,6 +62,12 @@ defaultContentLanguage = 'ja'
     name = 'ブログ'
     url = '/blog/'
     weight = 50
+    
+  [[menu.main]]
+    identifier = 'faq'
+    name = 'FAQ'
+    url = '/faq/'
+    weight = 60
 
 # パーマリンク設定（シンプルなURL構造）
 [permalinks]
@@ -71,7 +77,7 @@ defaultContentLanguage = 'ja'
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
-      unsafe = false  # セキュリティ重視
+      unsafe = true  # HTML要素を許可（FAQのdetailsタグ用）
   [markup.highlight]
     codeFences = true
     guessSyntax = true

@@ -109,24 +109,60 @@ img {
   border-top: 1px solid var(--color-border);
 }
 
-/* カードグリッドレイアウト - 3列対応 */
+/* デフォルトカードグリッドレイアウト - 2列 */
 .card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* ブログ専用グリッドレイアウト - 3列 */
+.blog-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
 }
 
+/* サービス専用グリッドレイアウト - 2列 */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* プラン専用レイアウト - フレックス中央寄せ */
+.plans-grid {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  flex-wrap: wrap;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 1024px) {
-  .card-grid {
+  .blog-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .card-grid {
+  .card-grid,
+  .blog-grid,
+  .service-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .plans-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .plans-grid .card {
+    max-width: 300px;
   }
 }
 
@@ -136,6 +172,173 @@ img {
   grid-template-columns: 1fr;
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
+}
+
+/* ========================================================================
+   FAQ スタイル
+   ======================================================================== */
+.faq-item {
+  margin-bottom: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.faq-item details {
+  border: none;
+}
+
+.faq-question {
+  background-color: #f8f9fa;
+  padding: var(--spacing-md);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.1em;
+  margin: 0;
+  list-style: none;
+  transition: var(--transition);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.faq-question:hover {
+  background-color: #e9ecef;
+}
+
+.faq-question::marker {
+  display: none;
+}
+
+.faq-question::before {
+  content: "▶";
+  margin-right: var(--spacing-sm);
+  font-size: 0.8em;
+  transition: var(--transition);
+}
+
+details[open] .faq-question::before {
+  content: "▼";
+}
+
+.faq-answer {
+  padding: var(--spacing-md);
+  background-color: var(--color-background);
+}
+
+.faq-answer p {
+  margin-bottom: var(--spacing-sm);
+}
+
+.faq-answer p:last-child {
+  margin-bottom: 0;
+}
+
+.faq-answer a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.faq-answer a:hover {
+  text-decoration: underline;
+}
+
+/* ========================================================================
+   タグスタイル
+   ======================================================================== */
+.tags {
+  margin-top: var(--spacing-sm);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.tag {
+  display: inline-block;
+  background-color: #f5f5f5;
+  color: var(--color-text);
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid var(--color-border);
+  transition: var(--transition);
+}
+
+.tag:hover {
+  background-color: var(--color-accent);
+  color: white;
+  border-color: var(--color-accent);
+}
+
+/* 記事詳細ページの投稿日 */
+.post-date {
+  display: block;
+  color: var(--color-text-light);
+  font-size: 0.9rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+/* ========================================================================
+   関連記事スタイル
+   ======================================================================== */
+.related-posts {
+  margin-top: var(--spacing-xxl);
+  padding-top: var(--spacing-xl);
+  border-top: 2px solid var(--color-border);
+}
+
+.related-posts h2 {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text);
+}
+
+.related-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.related-post-card {
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background-color: var(--color-background);
+  transition: var(--transition);
+}
+
+.related-post-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.related-post-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.4;
+}
+
+.related-post-card h3 a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.related-post-card h3 a:hover {
+  color: var(--color-accent);
+}
+
+.related-post-card p {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.5;
+}
+
+.related-post-card .tags {
+  margin-top: var(--spacing-sm);
+}
+
+.related-post-card .tag {
+  font-size: 0.75rem;
 }
 
 /* ========================================================================
