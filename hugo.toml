@@ -68,6 +68,12 @@ defaultContentLanguage = 'ja'
     name = 'FAQ'
     url = '/faq/'
     weight = 60
+    
+  [[menu.main]]
+    identifier = 'contact'
+    name = 'お問い合わせ'
+    url = '/contact/'
+    weight = 70
 
 # パーマリンク設定（シンプルなURL構造）
 [permalinks]

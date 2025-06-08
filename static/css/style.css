@@ -770,6 +770,85 @@ li {
 }
 
 /* ========================================================================
+   お問い合わせフォーム
+   ======================================================================== */
+.contact-form {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: var(--color-background);
+  padding: var(--spacing-xl);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.required {
+  color: var(--color-accent);
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(231, 62, 143, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-submit {
+  text-align: center;
+  margin-top: var(--spacing-xl);
+}
+
+.button-primary {
+  background-color: var(--color-accent);
+  color: var(--color-background);
+  padding: var(--spacing-md) var(--spacing-xl);
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.button-primary:hover {
+  background-color: var(--color-text);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ========================================================================
    レスポンシブ対応
    ======================================================================== */
 @media (max-width: 768px) {
