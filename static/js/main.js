@@ -1,8 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     // フォーム送信成功メッセージ
     const urlParams = new URLSearchParams(window.location.search);
+    console.log('URL params:', window.location.search);
+    console.log('Success param:', urlParams.get('success'));
+    
     if (urlParams.get('success') === 'true') {
         const form = document.querySelector('.contact-form');
+        console.log('Form found:', form);
         if (form) {
             const successMessage = document.createElement('div');
             successMessage.className = 'form-success-message';
