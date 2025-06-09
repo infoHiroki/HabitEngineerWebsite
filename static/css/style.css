@@ -933,6 +933,70 @@ li {
 }
 
 /* ========================================================================
+   CTAセクション
+   ======================================================================== */
+.cta-section {
+  background-color: #f8f9fa;
+  padding: var(--spacing-xxl) 0;
+  margin-top: var(--spacing-xxl);
+  text-align: center;
+  border-top: 1px solid var(--color-border);
+}
+
+.cta-content h2 {
+  font-size: 2rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text);
+}
+
+.cta-content p {
+  font-size: 1.125rem;
+  margin-bottom: var(--spacing-xl);
+  color: var(--color-text-light);
+}
+
+.cta-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.button-primary {
+  background-color: var(--color-accent);
+  color: var(--color-background);
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  transition: var(--transition);
+}
+
+.button-primary:hover {
+  background-color: var(--color-text);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.button-secondary {
+  background-color: transparent;
+  color: var(--color-text);
+  padding: var(--spacing-md) var(--spacing-xl);
+  border: 2px solid var(--color-text);
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  transition: var(--transition);
+}
+
+.button-secondary:hover {
+  background-color: var(--color-text);
+  color: var(--color-background);
+}
+
+/* ========================================================================
    レスポンシブ対応
    ======================================================================== */
 @media (max-width: 768px) {
