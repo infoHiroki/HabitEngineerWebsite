@@ -438,7 +438,7 @@ li {
    モバイルヘッダー
    ======================================================================== */
 .mobile-header {
-  display: none;
+  display: block;
   background-color: var(--color-background);
   border-bottom: 1px solid var(--color-border);
   position: fixed;
