@@ -75,7 +75,7 @@
     </div>
 </article>
 
-{{ if ne .Section "contact-success" }}
+{{ if and (ne .RelPermalink "/contact/") (ne .RelPermalink "/contact-success/") }}
 {{ partial "cta.html" . }}
 {{ end }}
 {{ end }}
