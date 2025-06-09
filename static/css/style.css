@@ -78,6 +78,7 @@ img {
   padding: var(--spacing-lg);
   transition: var(--transition);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  text-align: center;
 }
 
 .card:hover {
@@ -173,6 +174,8 @@ img {
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
 }
+
+/* 実績カードも中央揃えで統一 */
 
 /* ========================================================================
    FAQ スタイル
@@ -620,14 +623,19 @@ li {
 }
 
 /* ページ本文 */
+.page-body {
+  text-align: center;
+}
+
 .page-body p {
   margin-bottom: 1.5rem;
 }
 
-
 .page-body ul,
 .page-body ol {
   margin-bottom: 1.5rem;
+  text-align: left;
+  display: inline-block;
 }
 
 .page-body li {
