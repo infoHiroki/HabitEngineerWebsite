@@ -244,13 +244,7 @@ description: "HabitEngineerのサービスに関するよくある質問と回�
 <summary class="faq-question">まずは相談だけでも可能ですか？</summary>
 <div class="faq-answer">
 <p>もちろん可能です。お客様の課題やニーズをお聞かせください。最適なソリューションをご提案いたします。</p>
-<p><strong>お問い合わせ</strong>: <a href="mailto:info@habitengineer.com">info@habitengineer.com</a></p>
 </div>
 </details>
 </div>
 
----
-
-**その他ご質問がございましたら、お気軽にお問い合わせください。**
-
-**メール**: [info@habitengineer.com](mailto:info@habitengineer.com)
