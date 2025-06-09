@@ -21,7 +21,7 @@ HabitEngineerのサービスに関するご質問やご相談は、下記フォ�
 
 ## お問い合わせフォーム
 
-<form class="contact-form" name="contact" method="POST" data-netlify="true">
+<form class="contact-form" name="contact" method="POST" data-netlify="true" action="/contact/?success=true">
   <div class="form-group">
     <label for="name">お名前 <span class="required">*</span></label>
     <input type="text" id="name" name="name" required>
