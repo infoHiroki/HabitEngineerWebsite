@@ -979,6 +979,21 @@ li {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* シンプルな光るアニメーション */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.cta-section .button-primary {
+  animation: pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(231, 62, 143, 0.3);
+}
+
 .button-secondary {
   background-color: transparent;
   color: var(--color-text);
