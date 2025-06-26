@@ -1,0 +1,77 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="HabitEngineer - IT技術で習慣を定着させる" description="AIとNotionでビジネスの課題を解決。習慣形成×エンジニアリングで業務改善をサポートします。">
+	<section class="hero">
+		<div class="container">
+			<h1>習慣 × エンジニア</h1>
+			<p>IT技術で習慣を定着させる - AIとNotionでビジネスの課題を解決</p>
+			<a href="/contact" class="cta-button">お問い合わせ</a>
+		</div>
+	</section>
+
+	<section class="services">
+		<div class="container">
+			<h2>サービス内容</h2>
+			<div class="service-grid">
+				<div class="service-card">
+					<h3>習慣形成コンサルティング</h3>
+					<p>行動科学に基づいた業務改善で、継続可能な習慣を構築します。</p>
+				</div>
+				<div class="service-card">
+					<h3>AI・Notion導入支援</h3>
+					<p>最新のITツールを活用した効率的な業務フローを設計します。</p>
+				</div>
+				<div class="service-card">
+					<h3>システム開発</h3>
+					<p>お客様の業務に最適化されたカスタムシステムを開発します。</p>
+				</div>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		color: white;
+		padding: 4rem 0;
+		text-align: center;
+	}
+	.hero h1 {
+		font-size: 3rem;
+		margin-bottom: 1rem;
+	}
+	.hero p {
+		font-size: 1.2rem;
+		margin-bottom: 2rem;
+	}
+	.cta-button {
+		background: #ff6b6b;
+		color: white;
+		padding: 1rem 2rem;
+		text-decoration: none;
+		border-radius: 5px;
+		font-weight: bold;
+	}
+	.services {
+		padding: 4rem 0;
+		background: #f8f9fa;
+	}
+	.services h2 {
+		text-align: center;
+		margin-bottom: 3rem;
+	}
+	.service-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 2rem;
+	}
+	.service-card {
+		background: white;
+		padding: 2rem;
+		border-radius: 10px;
+		box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+	}
+</style>
