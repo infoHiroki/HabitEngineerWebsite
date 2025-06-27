@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+// Content Collectionsからブログ記事を取得
+const allPosts = await getCollection('blog');
+
+// 日付順でソート（新しい順）
+const blogPosts = allPosts
+  .filter(post => !post.data.draft)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .map(post => ({
+    title: post.data.title,
+    slug: post.slug,
+    date: post.data.date,
+    description: post.data.description,
+    tags: post.data.tags || []
+  }));
+---
+
+<Layout title="ブログ" description="習慣形成とIT技術に関する最新情報をお届けします">
+<section class="list-page">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="/">HabitEngineer</a>
+            > ブログ
+        </nav>
+        
+        <header class="page-header">
+            <h1 class="page-title">ブログ</h1>
+            <p class="page-description">習慣形成とIT技術に関する最新情報をお届けします</p>
+        </header>
+        
+        <div class="list-content">
+            <div class="blog-grid">
+                {blogPosts.map(post => (
+                    <article class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <a href={`/blog/${post.slug}/`}>{post.title}</a>
+                            </h2>
+                            <time class="card-subtitle" datetime={post.date.toISOString()}>
+                                {post.date.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
+                            </time>
+                        </div>
+                        <div class="card-body">
+                            <p>{post.description}</p>
+                            {post.tags && (
+                                <div class="tags">
+                                    {post.tags.map(tag => (
+                                        <span class="tag">#{tag}</span>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </div>
+    </div>
+</section>
+</Layout>
