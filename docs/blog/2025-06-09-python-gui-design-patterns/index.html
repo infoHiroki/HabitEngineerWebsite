@@ -1,0 +1,739 @@
+<!DOCTYPE html><html lang="ja"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="建築会社向けアプリ開発の実体験から学んだ、Pythonデスクトップアプリの設計パターン。保守性と拡張性を両立させる実践的手法を解説"><title>PythonでGUIアプリを作る時に絶対知っておくべき5つの設計パターン | HabitEngineer</title><!-- OGPタグ --><meta property="og:title" content="PythonでGUIアプリを作る時に絶対知っておくべき5つの設計パターン | HabitEngineer"><meta property="og:description" content="建築会社向けアプリ開発の実体験から学んだ、Pythonデスクトップアプリの設計パターン。保守性と拡張性を両立させる実践的手法を解説"><meta property="og:type" content="article"><meta property="og:url" content="https://habitengineer.com/blog/2025-06-09-python-gui-design-patterns/"><meta property="og:site_name" content="HabitEngineer"><meta property="og:locale" content="ja_JP"><!-- Twitterカード --><meta name="twitter:card" content="summary"><meta name="twitter:title" content="PythonでGUIアプリを作る時に絶対知っておくべき5つの設計パターン | HabitEngineer"><meta name="twitter:description" content="建築会社向けアプリ開発の実体験から学んだ、Pythonデスクトップアプリの設計パターン。保守性と拡張性を両立させる実践的手法を解説"><!-- ファビコン --><link rel="icon" type="image/svg+xml" href="/images/favicon.svg"><link rel="icon" type="image/png" href="/images/favicon.png"><link rel="stylesheet" href="/css/style.css"><!-- 構造化データ --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"PythonでGUIアプリを作る時に絶対知っておくべき5つの設計パターン","description":"建築会社向けアプリ開発の実体験から学んだ、Pythonデスクトップアプリの設計パターン。保守性と拡張性を両立させる実践的手法を解説","datePublished":"2025-06-27T09:02:59.558Z","dateModified":"2025-06-27T09:02:59.558Z","author":{"@type":"Organization","name":"HabitEngineer"},"publisher":{"@type":"Organization","name":"HabitEngineer","logo":{"@type":"ImageObject","url":"https://habitengineer.com/images/logo.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://habitengineer.com/blog/2025-06-09-python-gui-design-patterns/"}}</script></head> <body> <div class="site-layout"> <!-- モバイル用ヘッダー --> <header class="mobile-header"> <div class="mobile-header-content"> <a href="/" class="mobile-logo"> <img src="/images/logo.svg" alt="HabitEngineer Logo" width="40" height="40"> <span class="mobile-title">HabitEngineer</span> </a> <button class="hamburger-button" aria-label="メニューを開く"> <span class="hamburger-line"></span> <span class="hamburger-line"></span> <span class="hamburger-line"></span> </button> </div> </header> <!-- デスクトップ用サイドバー / モバイル用オーバーレイメニュー --> <aside class="sidebar"> <div class="sidebar-header"> <a href="/" class="site-title"> <div class="logo"> <img src="/images/logo.svg" alt="HabitEngineer Logo" width="50" height="50"> </div> <div class="title-text"> <span class="company-name">HabitEngineer</span> <span class="tagline">習慣 × エンジニア</span> </div> </a> </div> <nav class="sidebar-nav"> <ul class="nav-menu"> <li class="nav-item"> <a href="/" class="nav-link">HabitEngineerとは</a> </li> <li class="nav-item"> <a href="/services/" class="nav-link">サービス</a> </li> <li class="nav-item"> <a href="/products/" class="nav-link">開発製品</a> </li> <li class="nav-item"> <a href="/results/" class="nav-link">実績</a> </li> <li class="nav-item"> <a href="/about/" class="nav-link">事業者情報</a> </li> <li class="nav-item"> <a href="/blog/" class="nav-link">ブログ</a> </li> <li class="nav-item"> <a href="/faq/" class="nav-link">FAQ</a> </li> <li class="nav-item"> <a href="/contact/" class="nav-link">お問い合わせ</a> </li> </ul> </nav> </aside> <!-- モバイル用オーバーレイ --> <div class="mobile-overlay"></div> <div class="main-wrapper"> <main class="site-main">  <article class="page-content"> <div class="container"> <nav class="breadcrumb"> <a href="/">HabitEngineer</a>
+> <a href="/blog/">ブログ</a>
+> PythonでGUIアプリを作る時に絶対知っておくべき5つの設計パターン </nav> <header class="page-header"> <h1 class="page-title">PythonでGUIアプリを作る時に絶対知っておくべき5つの設計パターン</h1> <time class="post-date" datetime="2024-12-10T00:00:00.000Z"> 2024年12月10日 </time> <div class="tags"> <span class="tag">#Python</span><span class="tag">#GUI</span><span class="tag">#設計パターン</span><span class="tag">#Tkinter</span><span class="tag">#PyQt</span><span class="tag">#アーキテクチャ</span><span class="tag">#保守性</span> </div> </header> <div class="page-body"> <h2 id="はじめに">はじめに</h2>
+<p>「Pythonでデスクトップアプリを作ったけど、コードがスパゲッティ状態になってしまった」「機能追加のたびにバグが発生する」──このような悩みを抱えていませんか？</p>
+<p>本記事では、HabitEngineerが某建築会社様向けに開発したPythonアプリケーションの実体験を基に、<strong>保守性と拡張性を両立</strong>させるための5つの設計パターンを解説します。3ヶ月間の開発プロジェクトで学んだ実践的なノウハウをお伝えします。</p>
+<h2 id="開発プロジェクトの概要">開発プロジェクトの概要</h2>
+<h3 id="プロジェクト背景">プロジェクト背景</h3>
+<ul>
+<li><strong>クライアント</strong>: 某建築会社様</li>
+<li><strong>開発期間</strong>: 3ヶ月</li>
+<li><strong>アプリ目的</strong>: 業務特有の計算処理自動化</li>
+<li><strong>技術スタック</strong>: Python 3.11 + Tkinter + SQLite</li>
+</ul>
+<h3 id="直面した課題">直面した課題</h3>
+<ul>
+<li><strong>複雑な業務ロジック</strong>: 建築特有の計算式</li>
+<li><strong>頻繁な仕様変更</strong>: 法規制・業界基準の変化</li>
+<li><strong>非エンジニアユーザー</strong>: 直感的なUI必須</li>
+<li><strong>長期保守</strong>: 5年以上の継続利用予定</li>
+</ul>
+<h2 id="設計パターン1-mvcアーキテクチャの実装">設計パターン1: MVCアーキテクチャの実装</h2>
+<h3 id="なぜmvcが重要なのか">なぜMVCが重要なのか</h3>
+<p>GUI開発でよくある失敗は、<strong>ビジネスロジックとUI処理の混在</strong>です。建築会社プロジェクトでも、初期は以下のような問題が発生しました：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># ❌ 悪い例：UIとロジックが混在</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> CalculatorWindow</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.window </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> tk.Tk()</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.entry </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> tk.Entry(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.window)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.button </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> tk.Button(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.window, </span><span style="color:#FFAB70">command</span><span style="color:#F97583">=</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.calculate)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> calculate</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#6A737D">        # UIの値取得とビジネスロジックが混在</span></span>
+<span class="line"><span style="color:#E1E4E8">        length </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> float</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.entry.get())</span></span>
+<span class="line"><span style="color:#E1E4E8">        width </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> float</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.width_entry.get())</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#6A737D">        # 複雑な建築計算ロジック</span></span>
+<span class="line"><span style="color:#E1E4E8">        area </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> length </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> width</span></span>
+<span class="line"><span style="color:#E1E4E8">        material_cost </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> area </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> 15000</span><span style="color:#6A737D">  # 材料費計算</span></span>
+<span class="line"><span style="color:#E1E4E8">        labor_cost </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> area </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> 8000</span><span style="color:#6A737D">     # 人件費計算</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#6A737D">        # またUIの更新</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.result_label.config(</span><span style="color:#FFAB70">text</span><span style="color:#F97583">=</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"総額: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">material_cost </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> labor_cost</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">円"</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h3 id="mvcによる改善実装">MVCによる改善実装</h3>
+<h4 id="model-ビジネスロジック層">Model: ビジネスロジック層</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># ✅ 良い例：ビジネスロジックの分離</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> dataclasses </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> dataclass</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> typing </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Dict, Any</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@dataclass</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> ConstructionProject</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    length: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"><span style="color:#E1E4E8">    width: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"><span style="color:#E1E4E8">    material_unit_cost: </span><span style="color:#79B8FF">float</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 15000</span></span>
+<span class="line"><span style="color:#E1E4E8">    labor_unit_cost: </span><span style="color:#79B8FF">float</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 8000</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> calculate_area</span><span style="color:#E1E4E8">(self) -> </span><span style="color:#79B8FF">float</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.length </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.width</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> calculate_material_cost</span><span style="color:#E1E4E8">(self) -> </span><span style="color:#79B8FF">float</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.calculate_area() </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.material_unit_cost</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> calculate_labor_cost</span><span style="color:#E1E4E8">(self) -> </span><span style="color:#79B8FF">float</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.calculate_area() </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.labor_unit_cost</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> calculate_total_cost</span><span style="color:#E1E4E8">(self) -> </span><span style="color:#79B8FF">float</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.calculate_material_cost() </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.calculate_labor_cost()</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> to_dict</span><span style="color:#E1E4E8">(self) -> Dict[</span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">, Any]:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#9ECBFF">            'area'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.calculate_area(),</span></span>
+<span class="line"><span style="color:#9ECBFF">            'material_cost'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.calculate_material_cost(),</span></span>
+<span class="line"><span style="color:#9ECBFF">            'labor_cost'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.calculate_labor_cost(),</span></span>
+<span class="line"><span style="color:#9ECBFF">            'total_cost'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.calculate_total_cost()</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span></code></pre>
+<h4 id="view-ui表示層">View: UI表示層</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> tkinter </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> tk</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> tkinter </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> ttk</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> typing </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Callable, Dict, Any</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> CalculatorView</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self, parent: tk.Tk):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.parent </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> parent</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.setup_ui()</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#6A737D">        # コールバック関数（Controllerから設定）</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.on_calculate: Callable </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> None</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> setup_ui</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#6A737D">        # レイアウト構築</span></span>
+<span class="line"><span style="color:#E1E4E8">        main_frame </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> ttk.Frame(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.parent, </span><span style="color:#FFAB70">padding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"10"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        main_frame.grid(</span><span style="color:#FFAB70">row</span><span style="color:#F97583">=</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">column</span><span style="color:#F97583">=</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">sticky</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">(tk.W, tk.E, tk.N, tk.S))</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#6A737D">        # 入力フィールド</span></span>
+<span class="line"><span style="color:#E1E4E8">        ttk.Label(main_frame, </span><span style="color:#FFAB70">text</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"長さ (m):"</span><span style="color:#E1E4E8">).grid(</span><span style="color:#FFAB70">row</span><span style="color:#F97583">=</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">column</span><span style="color:#F97583">=</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">sticky</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">tk.W)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.length_var </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> tk.StringVar()</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.length_entry </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> ttk.Entry(main_frame, </span><span style="color:#FFAB70">textvariable</span><span style="color:#F97583">=</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.length_var)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.length_entry.grid(</span><span style="color:#FFAB70">row</span><span style="color:#F97583">=</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">column</span><span style="color:#F97583">=</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">sticky</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">(tk.W, tk.E))</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#E1E4E8">        ttk.Label(main_frame, </span><span style="color:#FFAB70">text</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"幅 (m):"</span><span style="color:#E1E4E8">).grid(</span><span style="color:#FFAB70">row</span><span style="color:#F97583">=</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">column</span><span style="color:#F97583">=</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">sticky</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">tk.W)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.width_var </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> tk.StringVar()</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.width_entry </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> ttk.Entry(main_frame, </span><span style="color:#FFAB70">textvariable</span><span style="color:#F97583">=</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.width_var)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.width_entry.grid(</span><span style="color:#FFAB70">row</span><span style="color:#F97583">=</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">column</span><span style="color:#F97583">=</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">sticky</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">(tk.W, tk.E))</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#6A737D">        # 計算ボタン</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.calc_button </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> ttk.Button(</span></span>
+<span class="line"><span style="color:#E1E4E8">            main_frame, </span></span>
+<span class="line"><span style="color:#FFAB70">            text</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"計算実行"</span><span style="color:#E1E4E8">, </span></span>
+<span class="line"><span style="color:#FFAB70">            command</span><span style="color:#F97583">=</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">._on_calculate_clicked</span></span>
+<span class="line"><span style="color:#E1E4E8">        )</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.calc_button.grid(</span><span style="color:#FFAB70">row</span><span style="color:#F97583">=</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">column</span><span style="color:#F97583">=</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">columnspan</span><span style="color:#F97583">=</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">pady</span><span style="color:#F97583">=</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#6A737D">        # 結果表示</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.result_frame </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> ttk.LabelFrame(main_frame, </span><span style="color:#FFAB70">text</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"計算結果"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">padding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"5"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.result_frame.grid(</span><span style="color:#FFAB70">row</span><span style="color:#F97583">=</span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">column</span><span style="color:#F97583">=</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">columnspan</span><span style="color:#F97583">=</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">sticky</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">(tk.W, tk.E), </span><span style="color:#FFAB70">pady</span><span style="color:#F97583">=</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.result_labels </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {}</span></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8"> i, label </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> enumerate</span><span style="color:#E1E4E8">([</span><span style="color:#9ECBFF">'面積'</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">'材料費'</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">'人件費'</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">'総額'</span><span style="color:#E1E4E8">]):</span></span>
+<span class="line"><span style="color:#E1E4E8">            ttk.Label(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.result_frame, </span><span style="color:#FFAB70">text</span><span style="color:#F97583">=</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">label</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">:"</span><span style="color:#E1E4E8">).grid(</span><span style="color:#FFAB70">row</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">i, </span><span style="color:#FFAB70">column</span><span style="color:#F97583">=</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">sticky</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">tk.W)</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.result_labels[label] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> ttk.Label(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.result_frame, </span><span style="color:#FFAB70">text</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"--"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.result_labels[label].grid(</span><span style="color:#FFAB70">row</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">i, </span><span style="color:#FFAB70">column</span><span style="color:#F97583">=</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">sticky</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">tk.W)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> _on_calculate_clicked</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.on_calculate:</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.on_calculate()</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> get_input_data</span><span style="color:#E1E4E8">(self) -> Dict[</span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">]:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#9ECBFF">            'length'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.length_var.get(),</span></span>
+<span class="line"><span style="color:#9ECBFF">            'width'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.width_var.get()</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> update_results</span><span style="color:#E1E4E8">(self, results: Dict[</span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">, Any]):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.result_labels[</span><span style="color:#9ECBFF">'面積'</span><span style="color:#E1E4E8">].config(</span><span style="color:#FFAB70">text</span><span style="color:#F97583">=</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">results[</span><span style="color:#9ECBFF">'area'</span><span style="color:#E1E4E8">]</span><span style="color:#F97583">:.2f</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF"> m²"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.result_labels[</span><span style="color:#9ECBFF">'材料費'</span><span style="color:#E1E4E8">].config(</span><span style="color:#FFAB70">text</span><span style="color:#F97583">=</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"¥</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">results[</span><span style="color:#9ECBFF">'material_cost'</span><span style="color:#E1E4E8">]</span><span style="color:#F97583">:,.0f</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.result_labels[</span><span style="color:#9ECBFF">'人件費'</span><span style="color:#E1E4E8">].config(</span><span style="color:#FFAB70">text</span><span style="color:#F97583">=</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"¥</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">results[</span><span style="color:#9ECBFF">'labor_cost'</span><span style="color:#E1E4E8">]</span><span style="color:#F97583">:,.0f</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.result_labels[</span><span style="color:#9ECBFF">'総額'</span><span style="color:#E1E4E8">].config(</span><span style="color:#FFAB70">text</span><span style="color:#F97583">=</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"¥</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">results[</span><span style="color:#9ECBFF">'total_cost'</span><span style="color:#E1E4E8">]</span><span style="color:#F97583">:,.0f</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> show_error</span><span style="color:#E1E4E8">(self, message: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">        tk.messagebox.showerror(</span><span style="color:#9ECBFF">"エラー"</span><span style="color:#E1E4E8">, message)</span></span></code></pre>
+<h4 id="controller-制御層">Controller: 制御層</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> CalculatorController</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self, view: CalculatorView):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.view </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> view</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.view.on_calculate </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.handle_calculate</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> handle_calculate</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#F97583">        try</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#6A737D">            # Viewから入力データ取得</span></span>
+<span class="line"><span style="color:#E1E4E8">            input_data </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.view.get_input_data()</span></span>
+<span class="line"><span style="color:#E1E4E8">            </span></span>
+<span class="line"><span style="color:#6A737D">            # 入力値検証</span></span>
+<span class="line"><span style="color:#E1E4E8">            length </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">._validate_float(input_data[</span><span style="color:#9ECBFF">'length'</span><span style="color:#E1E4E8">], </span><span style="color:#9ECBFF">"長さ"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">            width </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">._validate_float(input_data[</span><span style="color:#9ECBFF">'width'</span><span style="color:#E1E4E8">], </span><span style="color:#9ECBFF">"幅"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">            </span></span>
+<span class="line"><span style="color:#6A737D">            # Modelで計算実行</span></span>
+<span class="line"><span style="color:#E1E4E8">            project </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> ConstructionProject(</span><span style="color:#FFAB70">length</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">length, </span><span style="color:#FFAB70">width</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">width)</span></span>
+<span class="line"><span style="color:#E1E4E8">            results </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> project.to_dict()</span></span>
+<span class="line"><span style="color:#E1E4E8">            </span></span>
+<span class="line"><span style="color:#6A737D">            # Viewに結果表示</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.view.update_results(results)</span></span>
+<span class="line"><span style="color:#E1E4E8">            </span></span>
+<span class="line"><span style="color:#F97583">        except</span><span style="color:#79B8FF"> ValueError</span><span style="color:#F97583"> as</span><span style="color:#E1E4E8"> e:</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.view.show_error(</span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">(e))</span></span>
+<span class="line"><span style="color:#F97583">        except</span><span style="color:#79B8FF"> Exception</span><span style="color:#F97583"> as</span><span style="color:#E1E4E8"> e:</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.view.show_error(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"予期しないエラー: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">e</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> _validate_float</span><span style="color:#E1E4E8">(self, value: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">, field_name: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">) -> </span><span style="color:#79B8FF">float</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> not</span><span style="color:#E1E4E8"> value.strip():</span></span>
+<span class="line"><span style="color:#F97583">            raise</span><span style="color:#79B8FF"> ValueError</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">field_name</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">を入力してください"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">        try</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">            num </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> float</span><span style="color:#E1E4E8">(value)</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8"> num </span><span style="color:#F97583">&#x3C;=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">                raise</span><span style="color:#79B8FF"> ValueError</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">field_name</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">は正の値を入力してください"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#E1E4E8"> num</span></span>
+<span class="line"><span style="color:#F97583">        except</span><span style="color:#79B8FF"> ValueError</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">            raise</span><span style="color:#79B8FF"> ValueError</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">field_name</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">は有効な数値を入力してください"</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h3 id="mvcの利点">MVCの利点</h3>
+<ol>
+<li><strong>テストしやすさ</strong>: Modelは独立してテスト可能</li>
+<li><strong>保守性</strong>: 各層の責任が明確で修正しやすい</li>
+<li><strong>再利用性</strong>: ModelはCLIやAPIでも使用可能</li>
+<li><strong>チーム開発</strong>: UIとロジックを分担開発可能</li>
+</ol>
+<h2 id="設計パターン2-設定管理の外部化">設計パターン2: 設定管理の外部化</h2>
+<h3 id="問題-ハードコーディングの罠">問題: ハードコーディングの罠</h3>
+<p>建築会社アプリでは、法規制や材料価格の変動により、定数の変更が頻繁に発生しました：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># ❌ 悪い例：ハードコーディング</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> ConstructionCalculator</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> calculate_cost</span><span style="color:#E1E4E8">(self, area):</span></span>
+<span class="line"><span style="color:#79B8FF">        MATERIAL_COST</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 15000</span><span style="color:#6A737D">  # 法改正で変更されることが多い</span></span>
+<span class="line"><span style="color:#79B8FF">        LABOR_COST</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 8000</span><span style="color:#6A737D">      # 人件費も変動</span></span>
+<span class="line"><span style="color:#79B8FF">        TAX_RATE</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 0.10</span><span style="color:#6A737D">        # 消費税率も変更される</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> area </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> (</span><span style="color:#79B8FF">MATERIAL_COST</span><span style="color:#F97583"> +</span><span style="color:#79B8FF"> LABOR_COST</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> (</span><span style="color:#79B8FF">1</span><span style="color:#F97583"> +</span><span style="color:#79B8FF"> TAX_RATE</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h3 id="解決策-設定ファイルによる管理">解決策: 設定ファイルによる管理</h3>
+<h4 id="configjson-による設定外部化">config.json による設定外部化</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "calculation"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "material_unit_cost"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">15000</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "labor_unit_cost"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">8000</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "tax_rate"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">0.10</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "overhead_rate"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">0.15</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#79B8FF">  "ui"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "window_width"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">800</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "window_height"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">600</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "theme"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"clam"</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#79B8FF">  "validation"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "max_length"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1000</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "max_width"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1000</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "min_value"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">0.01</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h4 id="設定管理クラスの実装">設定管理クラスの実装</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> json</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> pathlib </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Path</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> typing </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Any, Dict</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> dataclasses </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> dataclass</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@dataclass</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> CalculationConfig</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    material_unit_cost: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"><span style="color:#E1E4E8">    labor_unit_cost: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"><span style="color:#E1E4E8">    tax_rate: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"><span style="color:#E1E4E8">    overhead_rate: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@dataclass</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> UIConfig</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    window_width: </span><span style="color:#79B8FF">int</span></span>
+<span class="line"><span style="color:#E1E4E8">    window_height: </span><span style="color:#79B8FF">int</span></span>
+<span class="line"><span style="color:#E1E4E8">    theme: </span><span style="color:#79B8FF">str</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@dataclass</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> ValidationConfig</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    max_length: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"><span style="color:#E1E4E8">    max_width: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"><span style="color:#E1E4E8">    min_value: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> ConfigManager</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self, config_path: </span><span style="color:#79B8FF">str</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "config.json"</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.config_path </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Path(config_path)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">._load_config()</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> _load_config</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#F97583">        try</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">            with</span><span style="color:#79B8FF"> open</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.config_path, </span><span style="color:#9ECBFF">'r'</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">encoding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">'utf-8'</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> f:</span></span>
+<span class="line"><span style="color:#E1E4E8">                data </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> json.load(f)</span></span>
+<span class="line"><span style="color:#E1E4E8">            </span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.calculation </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> CalculationConfig(</span><span style="color:#F97583">**</span><span style="color:#E1E4E8">data[</span><span style="color:#9ECBFF">'calculation'</span><span style="color:#E1E4E8">])</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.ui </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> UIConfig(</span><span style="color:#F97583">**</span><span style="color:#E1E4E8">data[</span><span style="color:#9ECBFF">'ui'</span><span style="color:#E1E4E8">])</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.validation </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> ValidationConfig(</span><span style="color:#F97583">**</span><span style="color:#E1E4E8">data[</span><span style="color:#9ECBFF">'validation'</span><span style="color:#E1E4E8">])</span></span>
+<span class="line"><span style="color:#E1E4E8">            </span></span>
+<span class="line"><span style="color:#F97583">        except</span><span style="color:#79B8FF"> FileNotFoundError</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">._create_default_config()</span></span>
+<span class="line"><span style="color:#F97583">        except</span><span style="color:#E1E4E8"> (json.JSONDecodeError, </span><span style="color:#79B8FF">KeyError</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> e:</span></span>
+<span class="line"><span style="color:#F97583">            raise</span><span style="color:#79B8FF"> ValueError</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"設定ファイルが無効です: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">e</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> _create_default_config</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#9ECBFF">        """デフォルト設定ファイルを作成"""</span></span>
+<span class="line"><span style="color:#E1E4E8">        default_config </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#9ECBFF">            "calculation"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#9ECBFF">                "material_unit_cost"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">15000</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "labor_unit_cost"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">8000</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "tax_rate"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">0.10</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "overhead_rate"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">0.15</span></span>
+<span class="line"><span style="color:#E1E4E8">            },</span></span>
+<span class="line"><span style="color:#9ECBFF">            "ui"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#9ECBFF">                "window_width"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">800</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "window_height"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">600</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "theme"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"clam"</span></span>
+<span class="line"><span style="color:#E1E4E8">            },</span></span>
+<span class="line"><span style="color:#9ECBFF">            "validation"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#9ECBFF">                "max_length"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1000</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "max_width"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1000</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "min_value"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">0.01</span></span>
+<span class="line"><span style="color:#E1E4E8">            }</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#79B8FF"> open</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.config_path, </span><span style="color:#9ECBFF">'w'</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">encoding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">'utf-8'</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> f:</span></span>
+<span class="line"><span style="color:#E1E4E8">            json.dump(default_config, f, </span><span style="color:#FFAB70">indent</span><span style="color:#F97583">=</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">ensure_ascii</span><span style="color:#F97583">=</span><span style="color:#79B8FF">False</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">._load_config()</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> save_config</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#9ECBFF">        """現在の設定をファイルに保存"""</span></span>
+<span class="line"><span style="color:#E1E4E8">        data </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#9ECBFF">            "calculation"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#9ECBFF">                "material_unit_cost"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.calculation.material_unit_cost,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "labor_unit_cost"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.calculation.labor_unit_cost,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "tax_rate"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.calculation.tax_rate,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "overhead_rate"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.calculation.overhead_rate</span></span>
+<span class="line"><span style="color:#E1E4E8">            },</span></span>
+<span class="line"><span style="color:#9ECBFF">            "ui"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#9ECBFF">                "window_width"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.ui.window_width,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "window_height"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.ui.window_height,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "theme"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.ui.theme</span></span>
+<span class="line"><span style="color:#E1E4E8">            },</span></span>
+<span class="line"><span style="color:#9ECBFF">            "validation"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#9ECBFF">                "max_length"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.validation.max_length,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "max_width"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.validation.max_width,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "min_value"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.validation.min_value</span></span>
+<span class="line"><span style="color:#E1E4E8">            }</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#79B8FF"> open</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.config_path, </span><span style="color:#9ECBFF">'w'</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">encoding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">'utf-8'</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> f:</span></span>
+<span class="line"><span style="color:#E1E4E8">            json.dump(data, f, </span><span style="color:#FFAB70">indent</span><span style="color:#F97583">=</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">ensure_ascii</span><span style="color:#F97583">=</span><span style="color:#79B8FF">False</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># シングルトンパターンで設定管理</span></span>
+<span class="line"><span style="color:#E1E4E8">config </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> ConfigManager()</span></span></code></pre>
+<h4 id="設定を使った改善されたmodel">設定を使った改善されたModel</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> ConstructionProject</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self, length: </span><span style="color:#79B8FF">float</span><span style="color:#E1E4E8">, width: </span><span style="color:#79B8FF">float</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.length </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> length</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.width </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> width</span></span>
+<span class="line"><span style="color:#6A737D">        # 設定から値を取得</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.config </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> config.calculation</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> calculate_total_cost</span><span style="color:#E1E4E8">(self) -> </span><span style="color:#79B8FF">float</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">        area </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.length </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.width</span></span>
+<span class="line"><span style="color:#E1E4E8">        base_cost </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> area </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> (</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.config.material_unit_cost </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.config.labor_unit_cost)</span></span>
+<span class="line"><span style="color:#E1E4E8">        with_overhead </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> base_cost </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> (</span><span style="color:#79B8FF">1</span><span style="color:#F97583"> +</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.config.overhead_rate)</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> with_overhead </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> (</span><span style="color:#79B8FF">1</span><span style="color:#F97583"> +</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.config.tax_rate)</span></span></code></pre>
+<h2 id="設計パターン3-エラーハンドリングの体系化">設計パターン3: エラーハンドリングの体系化</h2>
+<h3 id="問題-不適切なエラー処理">問題: 不適切なエラー処理</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># ❌ 悪い例：エラー情報が不十分</span></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> calculate</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#F97583">    try</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">        result </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> some_calculation()</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.display_result(result)</span></span>
+<span class="line"><span style="color:#F97583">    except</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">        messagebox.showerror(</span><span style="color:#9ECBFF">"エラー"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"計算に失敗しました"</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h3 id="解決策-カスタム例外クラスの活用">解決策: カスタム例外クラスの活用</h3>
+<h4 id="カスタム例外の定義">カスタム例外の定義</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> CalculationError</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">Exception</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#9ECBFF">    """計算関連のエラー基底クラス"""</span></span>
+<span class="line"><span style="color:#F97583">    pass</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> ValidationError</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">CalculationError</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#9ECBFF">    """入力値検証エラー"""</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self, field_name: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">, value: Any, message: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.field_name </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> field_name</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.value </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> value</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.message </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> message</span></span>
+<span class="line"><span style="color:#79B8FF">        super</span><span style="color:#E1E4E8">().</span><span style="color:#79B8FF">__init__</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">field_name</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">message</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> BusinessLogicError</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">CalculationError</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#9ECBFF">    """ビジネスロジックエラー"""</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self, operation: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">, reason: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.operation </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> operation</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.reason </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> reason</span></span>
+<span class="line"><span style="color:#79B8FF">        super</span><span style="color:#E1E4E8">().</span><span style="color:#79B8FF">__init__</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">operation</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">の実行に失敗: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">reason</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> ConfigurationError</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">CalculationError</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#9ECBFF">    """設定関連エラー"""</span></span>
+<span class="line"><span style="color:#F97583">    pass</span></span></code></pre>
+<h4 id="バリデーターの実装">バリデーターの実装</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> typing </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Union</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> InputValidator</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self, config: ValidationConfig):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.config </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> config</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> validate_dimension</span><span style="color:#E1E4E8">(self, value: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">, field_name: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">) -> </span><span style="color:#79B8FF">float</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#6A737D">        # 空値チェック</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> not</span><span style="color:#E1E4E8"> value.strip():</span></span>
+<span class="line"><span style="color:#F97583">            raise</span><span style="color:#E1E4E8"> ValidationError(field_name, value, </span><span style="color:#9ECBFF">"値が入力されていません"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#6A737D">        # 数値変換チェック</span></span>
+<span class="line"><span style="color:#F97583">        try</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">            num_value </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> float</span><span style="color:#E1E4E8">(value)</span></span>
+<span class="line"><span style="color:#F97583">        except</span><span style="color:#79B8FF"> ValueError</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">            raise</span><span style="color:#E1E4E8"> ValidationError(field_name, value, </span><span style="color:#9ECBFF">"有効な数値を入力してください"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#6A737D">        # 範囲チェック</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> num_value </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.config.min_value:</span></span>
+<span class="line"><span style="color:#F97583">            raise</span><span style="color:#E1E4E8"> ValidationError(</span></span>
+<span class="line"><span style="color:#E1E4E8">                field_name, </span></span>
+<span class="line"><span style="color:#E1E4E8">                num_value, </span></span>
+<span class="line"><span style="color:#F97583">                f</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">{self</span><span style="color:#E1E4E8">.config.min_value</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">以上の値を入力してください"</span></span>
+<span class="line"><span style="color:#E1E4E8">            )</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> field_name </span><span style="color:#F97583">==</span><span style="color:#9ECBFF"> "長さ"</span><span style="color:#F97583"> and</span><span style="color:#E1E4E8"> num_value </span><span style="color:#F97583">></span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.config.max_length:</span></span>
+<span class="line"><span style="color:#F97583">            raise</span><span style="color:#E1E4E8"> ValidationError(</span></span>
+<span class="line"><span style="color:#E1E4E8">                field_name, </span></span>
+<span class="line"><span style="color:#E1E4E8">                num_value, </span></span>
+<span class="line"><span style="color:#F97583">                f</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">{self</span><span style="color:#E1E4E8">.config.max_length</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">以下の値を入力してください"</span></span>
+<span class="line"><span style="color:#E1E4E8">            )</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> field_name </span><span style="color:#F97583">==</span><span style="color:#9ECBFF"> "幅"</span><span style="color:#F97583"> and</span><span style="color:#E1E4E8"> num_value </span><span style="color:#F97583">></span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.config.max_width:</span></span>
+<span class="line"><span style="color:#F97583">            raise</span><span style="color:#E1E4E8"> ValidationError(</span></span>
+<span class="line"><span style="color:#E1E4E8">                field_name, </span></span>
+<span class="line"><span style="color:#E1E4E8">                num_value, </span></span>
+<span class="line"><span style="color:#F97583">                f</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">{self</span><span style="color:#E1E4E8">.config.max_width</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">以下の値を入力してください"</span></span>
+<span class="line"><span style="color:#E1E4E8">            )</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> num_value</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> validate_project_data</span><span style="color:#E1E4E8">(self, length: </span><span style="color:#79B8FF">float</span><span style="color:#E1E4E8">, width: </span><span style="color:#79B8FF">float</span><span style="color:#E1E4E8">) -> </span><span style="color:#79B8FF">None</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#6A737D">        # ビジネスルール検証</span></span>
+<span class="line"><span style="color:#E1E4E8">        area </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> length </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> width</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> area </span><span style="color:#F97583">></span><span style="color:#79B8FF"> 10000</span><span style="color:#E1E4E8">:  </span><span style="color:#6A737D"># 1万平米超</span></span>
+<span class="line"><span style="color:#F97583">            raise</span><span style="color:#E1E4E8"> BusinessLogicError(</span></span>
+<span class="line"><span style="color:#9ECBFF">                "面積計算"</span><span style="color:#E1E4E8">, </span></span>
+<span class="line"><span style="color:#9ECBFF">                "計算可能な最大面積（10,000m²）を超えています"</span></span>
+<span class="line"><span style="color:#E1E4E8">            )</span></span></code></pre>
+<h4 id="統一されたエラーハンドリング">統一されたエラーハンドリング</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> logging</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> datetime </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> datetime</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> ErrorHandler</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self, view):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.view </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> view</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.setup_logging()</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> setup_logging</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#E1E4E8">        logging.basicConfig(</span></span>
+<span class="line"><span style="color:#FFAB70">            filename</span><span style="color:#F97583">=</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">'app_errors_</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">datetime.now().strftime(</span><span style="color:#9ECBFF">"%Y%m"</span><span style="color:#E1E4E8">)</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">.log'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">            level</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">logging.</span><span style="color:#79B8FF">ERROR</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">            format</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">'</span><span style="color:#79B8FF">%(asctime)s</span><span style="color:#9ECBFF"> - </span><span style="color:#79B8FF">%(levelname)s</span><span style="color:#9ECBFF"> - </span><span style="color:#79B8FF">%(message)s</span><span style="color:#9ECBFF">'</span></span>
+<span class="line"><span style="color:#E1E4E8">        )</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> handle_error</span><span style="color:#E1E4E8">(self, error: </span><span style="color:#79B8FF">Exception</span><span style="color:#E1E4E8">, context: </span><span style="color:#79B8FF">str</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> ""</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#9ECBFF">        """統一されたエラー処理"""</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#79B8FF"> isinstance</span><span style="color:#E1E4E8">(error, ValidationError):</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">._handle_validation_error(error)</span></span>
+<span class="line"><span style="color:#F97583">        elif</span><span style="color:#79B8FF"> isinstance</span><span style="color:#E1E4E8">(error, BusinessLogicError):</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">._handle_business_error(error)</span></span>
+<span class="line"><span style="color:#F97583">        elif</span><span style="color:#79B8FF"> isinstance</span><span style="color:#E1E4E8">(error, ConfigurationError):</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">._handle_config_error(error)</span></span>
+<span class="line"><span style="color:#F97583">        else</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">._handle_unexpected_error(error, context)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> _handle_validation_error</span><span style="color:#E1E4E8">(self, error: ValidationError):</span></span>
+<span class="line"><span style="color:#E1E4E8">        message </span><span style="color:#F97583">=</span><span style="color:#F97583"> f</span><span style="color:#9ECBFF">"入力エラー</span><span style="color:#79B8FF">\n\n{</span><span style="color:#E1E4E8">error.message</span><span style="color:#79B8FF">}\n\n</span><span style="color:#9ECBFF">入力値を確認してください。"</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.view.show_error(message)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> _handle_business_error</span><span style="color:#E1E4E8">(self, error: BusinessLogicError):</span></span>
+<span class="line"><span style="color:#E1E4E8">        message </span><span style="color:#F97583">=</span><span style="color:#F97583"> f</span><span style="color:#9ECBFF">"計算エラー</span><span style="color:#79B8FF">\n\n{</span><span style="color:#E1E4E8">error.reason</span><span style="color:#79B8FF">}\n\n</span><span style="color:#9ECBFF">条件を変更して再実行してください。"</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.view.show_error(message)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> _handle_config_error</span><span style="color:#E1E4E8">(self, error: ConfigurationError):</span></span>
+<span class="line"><span style="color:#E1E4E8">        message </span><span style="color:#F97583">=</span><span style="color:#F97583"> f</span><span style="color:#9ECBFF">"設定エラー</span><span style="color:#79B8FF">\n\n{str</span><span style="color:#E1E4E8">(error)</span><span style="color:#79B8FF">}\n\n</span><span style="color:#9ECBFF">設定ファイルを確認してください。"</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.view.show_error(message)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> _handle_unexpected_error</span><span style="color:#E1E4E8">(self, error: </span><span style="color:#79B8FF">Exception</span><span style="color:#E1E4E8">, context: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">        error_id </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> datetime.now().strftime(</span><span style="color:#9ECBFF">"%Y%m</span><span style="color:#79B8FF">%d</span><span style="color:#9ECBFF">_%H%M%S"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#6A737D">        # ログに詳細を記録</span></span>
+<span class="line"><span style="color:#E1E4E8">        logging.error(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"Unexpected error [</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">error_id</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">] in </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">context</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">: </span><span style="color:#79B8FF">{str</span><span style="color:#E1E4E8">(error)</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#6A737D">        # ユーザーには簡潔なメッセージ</span></span>
+<span class="line"><span style="color:#E1E4E8">        message </span><span style="color:#F97583">=</span><span style="color:#F97583"> f</span><span style="color:#9ECBFF">"予期しないエラーが発生しました</span><span style="color:#79B8FF">\n\n</span><span style="color:#9ECBFF">エラーID: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">error_id</span><span style="color:#79B8FF">}\n\n</span><span style="color:#9ECBFF">サポートにお問い合わせください。"</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.view.show_error(message)</span></span></code></pre>
+<h2 id="設計パターン4-データ永続化の抽象化">設計パターン4: データ永続化の抽象化</h2>
+<h3 id="問題-データアクセスの散在">問題: データアクセスの散在</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># ❌ 悪い例：SQLが散在</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> ProjectManager</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> save_project</span><span style="color:#E1E4E8">(self, project):</span></span>
+<span class="line"><span style="color:#E1E4E8">        conn </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> sqlite3.connect(</span><span style="color:#9ECBFF">'projects.db'</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        cursor </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> conn.cursor()</span></span>
+<span class="line"><span style="color:#E1E4E8">        cursor.execute(</span></span>
+<span class="line"><span style="color:#9ECBFF">            "INSERT INTO projects (name, length, width, cost) VALUES (?, ?, ?, ?)"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">            (project.name, project.length, project.width, project.cost)</span></span>
+<span class="line"><span style="color:#E1E4E8">        )</span></span>
+<span class="line"><span style="color:#E1E4E8">        conn.commit()</span></span>
+<span class="line"><span style="color:#E1E4E8">        conn.close()</span></span></code></pre>
+<h3 id="解決策-repository-パターン">解決策: Repository パターン</h3>
+<h4 id="データモデルの定義">データモデルの定義</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> dataclasses </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> dataclass</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> datetime </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> datetime</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> typing </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Optional</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@dataclass</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> ProjectData</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#79B8FF">    id</span><span style="color:#E1E4E8">: Optional[</span><span style="color:#79B8FF">int</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#E1E4E8">    name: </span><span style="color:#79B8FF">str</span></span>
+<span class="line"><span style="color:#E1E4E8">    length: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"><span style="color:#E1E4E8">    width: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"><span style="color:#E1E4E8">    material_cost: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"><span style="color:#E1E4E8">    labor_cost: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"><span style="color:#E1E4E8">    total_cost: </span><span style="color:#79B8FF">float</span></span>
+<span class="line"><span style="color:#E1E4E8">    created_at: datetime</span></span>
+<span class="line"><span style="color:#E1E4E8">    updated_at: datetime</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> to_dict</span><span style="color:#E1E4E8">(self) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#9ECBFF">            'id'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.id,</span></span>
+<span class="line"><span style="color:#9ECBFF">            'name'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.name,</span></span>
+<span class="line"><span style="color:#9ECBFF">            'length'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.length,</span></span>
+<span class="line"><span style="color:#9ECBFF">            'width'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.width,</span></span>
+<span class="line"><span style="color:#9ECBFF">            'material_cost'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.material_cost,</span></span>
+<span class="line"><span style="color:#9ECBFF">            'labor_cost'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.labor_cost,</span></span>
+<span class="line"><span style="color:#9ECBFF">            'total_cost'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.total_cost,</span></span>
+<span class="line"><span style="color:#9ECBFF">            'created_at'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.created_at.isoformat(),</span></span>
+<span class="line"><span style="color:#9ECBFF">            'updated_at'</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.updated_at.isoformat()</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span></code></pre>
+<h4 id="repository-の実装">Repository の実装</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> sqlite3</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> typing </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> List, Optional</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> abc </span><span style="color:#F97583">import</span><span style="color:#79B8FF"> ABC</span><span style="color:#E1E4E8">, abstractmethod</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> ProjectRepository</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">ABC</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#B392F0">    @abstractmethod</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> save</span><span style="color:#E1E4E8">(self, project: ProjectData) -> </span><span style="color:#79B8FF">int</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        pass</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#B392F0">    @abstractmethod</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> find_by_id</span><span style="color:#E1E4E8">(self, project_id: </span><span style="color:#79B8FF">int</span><span style="color:#E1E4E8">) -> Optional[ProjectData]:</span></span>
+<span class="line"><span style="color:#F97583">        pass</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#B392F0">    @abstractmethod</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> find_all</span><span style="color:#E1E4E8">(self) -> List[ProjectData]:</span></span>
+<span class="line"><span style="color:#F97583">        pass</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#B392F0">    @abstractmethod</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> update</span><span style="color:#E1E4E8">(self, project: ProjectData) -> </span><span style="color:#79B8FF">bool</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        pass</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#B392F0">    @abstractmethod</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> delete</span><span style="color:#E1E4E8">(self, project_id: </span><span style="color:#79B8FF">int</span><span style="color:#E1E4E8">) -> </span><span style="color:#79B8FF">bool</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        pass</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> SQLiteProjectRepository</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">ProjectRepository</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#79B8FF"> __init__</span><span style="color:#E1E4E8">(self, db_path: </span><span style="color:#79B8FF">str</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "projects.db"</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.db_path </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> db_path</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">._initialize_db()</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> _initialize_db</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#E1E4E8"> sqlite3.connect(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.db_path) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> conn:</span></span>
+<span class="line"><span style="color:#E1E4E8">            conn.execute(</span><span style="color:#9ECBFF">"""</span></span>
+<span class="line"><span style="color:#9ECBFF">                CREATE TABLE IF NOT EXISTS projects (</span></span>
+<span class="line"><span style="color:#9ECBFF">                    id INTEGER PRIMARY KEY AUTOINCREMENT,</span></span>
+<span class="line"><span style="color:#9ECBFF">                    name TEXT NOT NULL,</span></span>
+<span class="line"><span style="color:#9ECBFF">                    length REAL NOT NULL,</span></span>
+<span class="line"><span style="color:#9ECBFF">                    width REAL NOT NULL,</span></span>
+<span class="line"><span style="color:#9ECBFF">                    material_cost REAL NOT NULL,</span></span>
+<span class="line"><span style="color:#9ECBFF">                    labor_cost REAL NOT NULL,</span></span>
+<span class="line"><span style="color:#9ECBFF">                    total_cost REAL NOT NULL,</span></span>
+<span class="line"><span style="color:#9ECBFF">                    created_at TEXT NOT NULL,</span></span>
+<span class="line"><span style="color:#9ECBFF">                    updated_at TEXT NOT NULL</span></span>
+<span class="line"><span style="color:#9ECBFF">                )</span></span>
+<span class="line"><span style="color:#9ECBFF">            """</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> save</span><span style="color:#E1E4E8">(self, project: ProjectData) -> </span><span style="color:#79B8FF">int</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#E1E4E8"> sqlite3.connect(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.db_path) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> conn:</span></span>
+<span class="line"><span style="color:#E1E4E8">            cursor </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> conn.cursor()</span></span>
+<span class="line"><span style="color:#E1E4E8">            cursor.execute(</span><span style="color:#9ECBFF">"""</span></span>
+<span class="line"><span style="color:#9ECBFF">                INSERT INTO projects </span></span>
+<span class="line"><span style="color:#9ECBFF">                (name, length, width, material_cost, labor_cost, total_cost, created_at, updated_at)</span></span>
+<span class="line"><span style="color:#9ECBFF">                VALUES (?, ?, ?, ?, ?, ?, ?, ?)</span></span>
+<span class="line"><span style="color:#9ECBFF">            """</span><span style="color:#E1E4E8">, (</span></span>
+<span class="line"><span style="color:#E1E4E8">                project.name, project.length, project.width,</span></span>
+<span class="line"><span style="color:#E1E4E8">                project.material_cost, project.labor_cost, project.total_cost,</span></span>
+<span class="line"><span style="color:#E1E4E8">                project.created_at.isoformat(), project.updated_at.isoformat()</span></span>
+<span class="line"><span style="color:#E1E4E8">            ))</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#E1E4E8"> cursor.lastrowid</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> find_by_id</span><span style="color:#E1E4E8">(self, project_id: </span><span style="color:#79B8FF">int</span><span style="color:#E1E4E8">) -> Optional[ProjectData]:</span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#E1E4E8"> sqlite3.connect(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.db_path) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> conn:</span></span>
+<span class="line"><span style="color:#E1E4E8">            conn.row_factory </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> sqlite3.Row</span></span>
+<span class="line"><span style="color:#E1E4E8">            cursor </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> conn.cursor()</span></span>
+<span class="line"><span style="color:#E1E4E8">            cursor.execute(</span><span style="color:#9ECBFF">"SELECT * FROM projects WHERE id = ?"</span><span style="color:#E1E4E8">, (project_id,))</span></span>
+<span class="line"><span style="color:#E1E4E8">            row </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cursor.fetchone()</span></span>
+<span class="line"><span style="color:#E1E4E8">            </span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8"> row:</span></span>
+<span class="line"><span style="color:#F97583">                return</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">._row_to_project(row)</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#79B8FF"> None</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> find_all</span><span style="color:#E1E4E8">(self) -> List[ProjectData]:</span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#E1E4E8"> sqlite3.connect(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.db_path) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> conn:</span></span>
+<span class="line"><span style="color:#E1E4E8">            conn.row_factory </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> sqlite3.Row</span></span>
+<span class="line"><span style="color:#E1E4E8">            cursor </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> conn.cursor()</span></span>
+<span class="line"><span style="color:#E1E4E8">            cursor.execute(</span><span style="color:#9ECBFF">"SELECT * FROM projects ORDER BY created_at DESC"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">            rows </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cursor.fetchall()</span></span>
+<span class="line"><span style="color:#E1E4E8">            </span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#E1E4E8"> [</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">._row_to_project(row) </span><span style="color:#F97583">for</span><span style="color:#E1E4E8"> row </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> rows]</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> _row_to_project</span><span style="color:#E1E4E8">(self, row: sqlite3.Row) -> ProjectData:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> ProjectData(</span></span>
+<span class="line"><span style="color:#FFAB70">            id</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">row[</span><span style="color:#9ECBFF">'id'</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#FFAB70">            name</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">row[</span><span style="color:#9ECBFF">'name'</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#FFAB70">            length</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">row[</span><span style="color:#9ECBFF">'length'</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#FFAB70">            width</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">row[</span><span style="color:#9ECBFF">'width'</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#FFAB70">            material_cost</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">row[</span><span style="color:#9ECBFF">'material_cost'</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#FFAB70">            labor_cost</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">row[</span><span style="color:#9ECBFF">'labor_cost'</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#FFAB70">            total_cost</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">row[</span><span style="color:#9ECBFF">'total_cost'</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#FFAB70">            created_at</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">datetime.fromisoformat(row[</span><span style="color:#9ECBFF">'created_at'</span><span style="color:#E1E4E8">]),</span></span>
+<span class="line"><span style="color:#FFAB70">            updated_at</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">datetime.fromisoformat(row[</span><span style="color:#9ECBFF">'updated_at'</span><span style="color:#E1E4E8">])</span></span>
+<span class="line"><span style="color:#E1E4E8">        )</span></span></code></pre>
+<h2 id="設計パターン5-テスト可能な設計">設計パターン5: テスト可能な設計</h2>
+<h3 id="テストしやすいアーキテクチャ">テストしやすいアーキテクチャ</h3>
+<h4 id="modelのユニットテスト">Modelのユニットテスト</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> unittest</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> unittest.mock </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> patch, MagicMock</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> TestConstructionProject</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">unittest</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">TestCase</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> setUp</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.project </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> ConstructionProject(</span><span style="color:#FFAB70">length</span><span style="color:#F97583">=</span><span style="color:#79B8FF">10.0</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">width</span><span style="color:#F97583">=</span><span style="color:#79B8FF">8.0</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> test_calculate_area</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#E1E4E8">        expected </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 80.0</span></span>
+<span class="line"><span style="color:#E1E4E8">        actual </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.project.calculate_area()</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.assertEqual(actual, expected)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> test_calculate_total_cost</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#6A737D">        # 設定値をモック</span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#E1E4E8"> patch(</span><span style="color:#9ECBFF">'config.calculation'</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> mock_config:</span></span>
+<span class="line"><span style="color:#E1E4E8">            mock_config.material_unit_cost </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 15000</span></span>
+<span class="line"><span style="color:#E1E4E8">            mock_config.labor_unit_cost </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 8000</span></span>
+<span class="line"><span style="color:#E1E4E8">            mock_config.overhead_rate </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0.15</span></span>
+<span class="line"><span style="color:#E1E4E8">            mock_config.tax_rate </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0.10</span></span>
+<span class="line"><span style="color:#E1E4E8">            </span></span>
+<span class="line"><span style="color:#6A737D">            # 期待値計算: 80 * (15000 + 8000) * 1.15 * 1.10</span></span>
+<span class="line"><span style="color:#E1E4E8">            expected </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 80</span><span style="color:#F97583"> *</span><span style="color:#79B8FF"> 23000</span><span style="color:#F97583"> *</span><span style="color:#79B8FF"> 1.15</span><span style="color:#F97583"> *</span><span style="color:#79B8FF"> 1.10</span></span>
+<span class="line"><span style="color:#E1E4E8">            actual </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.project.calculate_total_cost()</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.assertAlmostEqual(actual, expected, </span><span style="color:#FFAB70">places</span><span style="color:#F97583">=</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> TestInputValidator</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">unittest</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">TestCase</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> setUp</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#E1E4E8">        mock_config </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> MagicMock()</span></span>
+<span class="line"><span style="color:#E1E4E8">        mock_config.min_value </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0.01</span></span>
+<span class="line"><span style="color:#E1E4E8">        mock_config.max_length </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1000</span></span>
+<span class="line"><span style="color:#E1E4E8">        mock_config.max_width </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1000</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.validator </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> InputValidator(mock_config)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> test_validate_dimension_valid_input</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#E1E4E8">        result </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.validator.validate_dimension(</span><span style="color:#9ECBFF">"10.5"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"長さ"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.assertEqual(result, </span><span style="color:#79B8FF">10.5</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> test_validate_dimension_empty_input</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.assertRaises(ValidationError) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> cm:</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.validator.validate_dimension(</span><span style="color:#9ECBFF">""</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"長さ"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.assertEqual(cm.exception.field_name, </span><span style="color:#9ECBFF">"長さ"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> test_validate_dimension_invalid_number</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.assertRaises(ValidationError):</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.validator.validate_dimension(</span><span style="color:#9ECBFF">"abc"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"長さ"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> test_validate_dimension_negative_value</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#F97583">        with</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.assertRaises(ValidationError):</span></span>
+<span class="line"><span style="color:#79B8FF">            self</span><span style="color:#E1E4E8">.validator.validate_dimension(</span><span style="color:#9ECBFF">"-5"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"長さ"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#79B8FF"> __name__</span><span style="color:#F97583"> ==</span><span style="color:#9ECBFF"> '__main__'</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    unittest.main()</span></span></code></pre>
+<h4 id="統合テストの例">統合テストの例</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> tempfile</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> os</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> TestProjectRepository</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">unittest</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">TestCase</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> setUp</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#6A737D">        # テスト用の一時データベース</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.temp_db </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> tempfile.NamedTemporaryFile(</span><span style="color:#FFAB70">delete</span><span style="color:#F97583">=</span><span style="color:#79B8FF">False</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.temp_db.close()</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.repository </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> SQLiteProjectRepository(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.temp_db.name)</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#6A737D">        # テストデータ</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.test_project </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> ProjectData(</span></span>
+<span class="line"><span style="color:#FFAB70">            id</span><span style="color:#F97583">=</span><span style="color:#79B8FF">None</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">            name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"テストプロジェクト"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">            length</span><span style="color:#F97583">=</span><span style="color:#79B8FF">10.0</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">            width</span><span style="color:#F97583">=</span><span style="color:#79B8FF">8.0</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">            material_cost</span><span style="color:#F97583">=</span><span style="color:#79B8FF">1200000</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">            labor_cost</span><span style="color:#F97583">=</span><span style="color:#79B8FF">640000</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">            total_cost</span><span style="color:#F97583">=</span><span style="color:#79B8FF">2024000</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">            created_at</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">datetime.now(),</span></span>
+<span class="line"><span style="color:#FFAB70">            updated_at</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">datetime.now()</span></span>
+<span class="line"><span style="color:#E1E4E8">        )</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> tearDown</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#E1E4E8">        os.unlink(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.temp_db.name)</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    def</span><span style="color:#B392F0"> test_save_and_find_project</span><span style="color:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#6A737D">        # 保存</span></span>
+<span class="line"><span style="color:#E1E4E8">        project_id </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.repository.save(</span><span style="color:#79B8FF">self</span><span style="color:#E1E4E8">.test_project)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.assertIsNotNone(project_id)</span></span>
+<span class="line"><span style="color:#E1E4E8">        </span></span>
+<span class="line"><span style="color:#6A737D">        # 検索</span></span>
+<span class="line"><span style="color:#E1E4E8">        found_project </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.repository.find_by_id(project_id)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.assertIsNotNone(found_project)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.assertEqual(found_project.name, </span><span style="color:#9ECBFF">"テストプロジェクト"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">        self</span><span style="color:#E1E4E8">.assertEqual(found_project.length, </span><span style="color:#79B8FF">10.0</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h2 id="実際の運用での学び">実際の運用での学び</h2>
+<h3 id="成功した施策">成功した施策</h3>
+<h4 id="1-段階的なリファクタリング">1. 段階的なリファクタリング</h4>
+<ul>
+<li>最初はモノリシックな構造から開始</li>
+<li>機能追加のタイミングでパターンを導入</li>
+<li>一度に全てを変更せず、徐々に改善</li>
+</ul>
+<h4 id="2-設定ファイルによる柔軟性">2. 設定ファイルによる柔軟性</h4>
+<ul>
+<li>税率変更時もコード修正不要</li>
+<li>クライアントが自身で設定変更可能</li>
+<li>テスト環境と本番環境の設定分離</li>
+</ul>
+<h4 id="3-包括的なエラーハンドリング">3. 包括的なエラーハンドリング</h4>
+<ul>
+<li>ユーザーフレンドリーなエラーメッセージ</li>
+<li>開発者向けの詳細ログ</li>
+<li>予期しないエラーからの優雅な復旧</li>
+</ul>
+<h3 id="苦労したポイント">苦労したポイント</h3>
+<h4 id="1-初期の設計不足">1. 初期の設計不足</h4>
+<ul>
+<li>MVP思考で始めたものの、設計を軽視</li>
+<li>後のリファクタリングコストが高くなった</li>
+<li>教訓：最小限でも設計パターンは最初から考慮</li>
+</ul>
+<h4 id="2-ユーザビリティとの兼ね合い">2. ユーザビリティとの兼ね合い</h4>
+<ul>
+<li>技術的には美しい設計でも、UI複雑化のリスク</li>
+<li>エンジニア目線とユーザー目線のバランス</li>
+<li>教訓：設計の複雑さをUIに押し付けない</li>
+</ul>
+<h2 id="まとめ">まとめ</h2>
+<p>PythonでGUIアプリケーションを開発する際の5つの設計パターンをご紹介しました：</p>
+<h3 id="5つのパターンの要点">5つのパターンの要点</h3>
+<ol>
+<li><strong>MVCアーキテクチャ</strong>: ビジネスロジックとUIの明確な分離</li>
+<li><strong>設定管理</strong>: ハードコーディングを避け、外部設定ファイルを活用</li>
+<li><strong>エラーハンドリング</strong>: カスタム例外による体系的なエラー処理</li>
+<li><strong>データ永続化</strong>: Repository パターンによるデータアクセスの抽象化</li>
+<li><strong>テスト可能性</strong>: 各層を独立してテストできる設計</li>
+</ol>
+<h3 id="導入の優先順位">導入の優先順位</h3>
+<p><strong>Phase 1</strong>: MVCアーキテクチャ + 基本的なエラーハンドリング
+<strong>Phase 2</strong>: 設定管理の外部化
+<strong>Phase 3</strong>: Repository パターンの導入
+<strong>Phase 4</strong>: 包括的なテストスイート構築</p>
+<h3 id="最後に">最後に</h3>
+<p>設計パターンは目的ではなく手段です。<strong>保守性</strong>、<strong>拡張性</strong>、<strong>テスト可能性</strong>を向上させるための道具として、プロジェクトの規模と要件に応じて適切に選択・適用することが重要です。</p>
+<p>建築会社様のプロジェクトでは、これらのパターンにより3ヶ月の開発期間中に仕様変更に柔軟に対応でき、5年以上の長期保守を見据えた安定したアプリケーションを提供できました。</p>
+<hr>
+<p><strong>Python開発支援のご相談:</strong></p>
+<ul>
+<li>お問い合わせ: <a href="mailto:dev@habitengineer.com">dev@habitengineer.com</a></li>
+<li>技術支援: アーキテクチャ設計から実装・保守まで包括的にサポート</li>
+</ul> </div> </div> </article>  </main> <footer class="minimal-footer"> <div class="container"> <p>© 2025 HabitEngineer. All rights reserved.</p> </div> </footer> </div> </div> <script src="/js/main.js"></script> </body> </html>
